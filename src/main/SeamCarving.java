@@ -1,8 +1,11 @@
 package main;
 
 import java.util.ArrayList;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
+
+import javax.imageio.ImageIO;
 public class SeamCarving
 {
 
@@ -39,8 +42,34 @@ public class SeamCarving
         }
     }
    
-   public static void writepgm(int[][] image, String filename) throws FileNotFoundException{
-	   PrintWriter pw = new PrintWriter(filename);
+   public static void writepgm(int[][] image, String filename)// throws FileNotFoundException{
+	   {		
+	        try {
+	        	File file = new File(filename);
+	        	if(file.createNewFile()){
+	        		System.out.println("file created");
+	        	}else{
+	        		System.out.println("file already exists");
+	        	}
+	        	FileWriter fw = new FileWriter(file.getAbsoluteFile());
+	        	BufferedWriter writer = new BufferedWriter(fw);
+	        	BufferedImage bi = new BufferedImage(200,300,BufferedImage.TYPE_3BYTE_BGR);
+	        	ImageIO.write(bi, "png", file);
+	        	//writer.write("Here is a test");
+	        	//writer.close();
+	        	
+	        	System.out.println("DONE");
+	        }
+	        
+	        catch(Throwable t) {
+	            t.printStackTrace(System.err) ;
+	            //return null;
+	        }
+	   /*
+	    * Repris d'internet mais fonctionne bizarement et genere pas un fichier .pgm
+	    * mais un fichier avec un tableau
+	    * 
+	    * PrintWriter pw = new PrintWriter(filename);
 	    int width = image[0].length;
 	    int height = image.length;
 	    
@@ -71,6 +100,7 @@ public class SeamCarving
 	      }
 	    }
 	    pw.close();
+	    */
    }
    
    public static String toString(int[][] image){
@@ -87,8 +117,8 @@ public class SeamCarving
 	   return sb.toString();
    }
 
-   public static void main(String[] args) throws FileNotFoundException
+   public static void main(String[] args)// throws FileNotFoundException
 	 {
-		writepgm(readpgm("ex1.pgm"),"test");
+		writepgm(readpgm("ex1.pgm"),"test.pgm");
 	 }
 }
