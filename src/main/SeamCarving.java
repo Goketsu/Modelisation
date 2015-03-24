@@ -39,8 +39,38 @@ public class SeamCarving
         }
     }
    
-   public static void writepgm(int[][] image, String filename){
-	   
+   public static void writepgm(int[][] image, String filename) throws FileNotFoundException{
+	   PrintWriter pw = new PrintWriter(filename);
+	    int width = image[0].length;
+	    int height = image.length;
+	    
+	    // magic number, width, height, and maxval
+	    pw.println("P2");
+	    pw.println(width + " " + height);
+	    pw.println(255);
+	    
+	    // print out the data, limiting the line lengths to 70 characters
+	    int lineLength = 0;
+	    for (int i = 0; i < height; ++i)
+	    {
+	      for (int j = 0; j < width; ++j)
+	      {
+	        int value = image[i][j];
+	        
+	        // if we are going over 70 characters on a line,
+	        // start a new line
+	        String stringValue = "" + value;
+	        int currentLength = stringValue.length() + 1;
+	        if (currentLength + lineLength > 70)
+	        {
+	          pw.println();
+	          lineLength = 0;
+	        }
+	        lineLength += currentLength;
+	        pw.print(value + " ");
+	      }
+	    }
+	    pw.close();
    }
    
    public static String toString(int[][] image){
@@ -57,8 +87,8 @@ public class SeamCarving
 	   return sb.toString();
    }
 
-   public static void main(String[] args)
+   public static void main(String[] args) throws FileNotFoundException
 	 {
-		toString((readpgm("ex1.pgm")));
+		writepgm(readpgm("ex1.pgm"),"test");
 	 }
 }
