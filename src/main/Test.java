@@ -40,6 +40,13 @@ class Test
    
    public static void main(String[] args)
 	 {
-		testGraph();
+	   int[][] tab = {{3,11,24,39},
+				  {8,21,29,39},
+				  {74,80,100,200}};
+	   Graph g = new Graph(4*3+2);
+	   g = g.toGraph(tab);
+	   g.writeFile("test_graph");
+	   testGraph();
+		
 	 }
 }
