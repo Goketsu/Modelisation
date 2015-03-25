@@ -53,10 +53,39 @@ public class SeamCarving
 	        	}
 	        	FileWriter fw = new FileWriter(file.getAbsoluteFile());
 	        	BufferedWriter writer = new BufferedWriter(fw);
-	        	BufferedImage bi = new BufferedImage(200,300,BufferedImage.TYPE_3BYTE_BGR);
-	        	ImageIO.write(bi, "png", file);
-	        	//writer.write("Here is a test");
-	        	//writer.close();
+	        	//BufferedImage bi = new BufferedImage(200,300,BufferedImage.TYPE_3BYTE_BGR);
+	        	//ImageIO.write(bi, "png", file);
+	        	
+	        	int width = image[0].length;
+	    	    int height = image.length;
+	    	    
+	        	writer.write("P2 \n");
+	        	writer.write(width + " " + height+"\n");
+	        	writer.write("255 \n");
+	        	
+	        	// print out the data, limiting the line lengths to 70 characters
+	        	int lineLength = 0;
+	    	    for (int i = 0; i < height; ++i)
+	    	    {
+	    	      for (int j = 0; j < width; ++j)
+	    	      {
+	    	        int value = image[i][j];
+	    	        
+	    	        // if we are going over 80 characters on a line,
+	    	        // start a new line
+	    	        String stringValue = "" + value;
+	    	        int currentLength = stringValue.length() + 1;
+	    	        if (currentLength + lineLength > 80)
+	    	        {
+	    	          writer.write("\n");;
+	    	          lineLength = 0;
+	    	        }
+	    	        lineLength += currentLength;
+	    	        writer.write(value + " ");
+	    	      }
+	    	    }
+	        	
+	        	writer.close();
 	        	
 	        	System.out.println("DONE");
 	        }
@@ -65,42 +94,9 @@ public class SeamCarving
 	            t.printStackTrace(System.err) ;
 	            //return null;
 	        }
-	   /*
-	    * Repris d'internet mais fonctionne bizarement et genere pas un fichier .pgm
-	    * mais un fichier avec un tableau
-	    * 
-	    * PrintWriter pw = new PrintWriter(filename);
-	    int width = image[0].length;
-	    int height = image.length;
-	    
-	    // magic number, width, height, and maxval
-	    pw.println("P2");
-	    pw.println(width + " " + height);
-	    pw.println(255);
-	    
-	    // print out the data, limiting the line lengths to 70 characters
-	    int lineLength = 0;
-	    for (int i = 0; i < height; ++i)
-	    {
-	      for (int j = 0; j < width; ++j)
-	      {
-	        int value = image[i][j];
 	        
-	        // if we are going over 70 characters on a line,
-	        // start a new line
-	        String stringValue = "" + value;
-	        int currentLength = stringValue.length() + 1;
-	        if (currentLength + lineLength > 70)
-	        {
-	          pw.println();
-	          lineLength = 0;
-	        }
-	        lineLength += currentLength;
-	        pw.print(value + " ");
-	      }
-	    }
-	    pw.close();
-	    */
+	   
+	  
    }
    
    public static String toString(int[][] image){
