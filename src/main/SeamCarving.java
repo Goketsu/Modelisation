@@ -99,6 +99,40 @@ public class SeamCarving
 	  
    }
    
+   public static int[][] interest (int[][] image){
+	   
+	   
+	   int width = image[0].length;
+	   int height = image.length;
+	   int[][] tab = new int[height][width];
+	   int intermediaire = 0;
+	   for (int i = 0; i < height; ++i)
+	   {
+		  if(image[i][1] > image[i][0]){
+			  tab[i][0] = image[i][1] - image[i][0];
+		  }else{
+			  tab[i][0] = image[i][0] - image[i][1];
+		  }
+ 	      for (int j = 1; j < width-1; ++j)
+ 	      {
+ 	    	  intermediaire = (image[i][j-1] + image[i][j+1]) /2;
+ 	    	  //System.out.println("intermediraire : "+intermediaire+" "+i+" "+j);
+ 	    	  if(intermediaire > image[i][j]){
+ 	    		  tab[i][j] = intermediaire - image[i][j];
+ 	    	  }else{
+ 	    		 tab[i][j] = image[i][j] - intermediaire;
+ 	    	  }
+ 	      }
+ 	     if(image[i][width-2] > image[i][width-1]){
+			  tab[i][width-1] = image[i][width-2] - image[i][width-1];
+		  }else{
+			  tab[i][width-1] = image[i][width-1] - image[i][width-2];
+		  }
+ 	   }
+	   return tab;
+   }
+   
+   // Useless ...
    public static String toString(int[][] image){
 	   StringBuilder sb = new StringBuilder();
 	   System.out.println("taille : "+image.length+", "+image[0].length);
@@ -113,8 +147,14 @@ public class SeamCarving
 	   return sb.toString();
    }
 
-   public static void main(String[] args)// throws FileNotFoundException
-	 {
-		writepgm(readpgm("ex1.pgm"),"test.pgm");
-	 }
+   public static void main(String[] args){// throws FileNotFoundException
+	   int[][] tab = {{3,11,24,39},
+	   				  {8,21,29,39},
+	   				  {74,80,100,200}};
+	   
+
+	   writepgm(readpgm("ex1.pgm"),"ex1_test.pgm");
+	   writepgm(interest(tab),"test.pgm");
+	   writepgm(interest(readpgm("ex1.pgm")),"ex1_interest.pgm");
+   }
 }
