@@ -1,5 +1,7 @@
 package main;
 
+import java.util.ArrayList;
+
 class Test
 {
    static boolean visite[];
@@ -9,10 +11,36 @@ class Test
 		System.out.println("Je visite " + u);
 		for (Edge e: g.adj(u))
 		  /* Si on prend l'arête dans le bon sens */
-		  if (e.from == u)
-			if (!visite[e.to])
-			  dfs(g,e.to);
+		if(u > 0){
+			if (e.from == u && e.capacity != -1)
+				if (!visite[e.to])
+					dfs(g,e.to);
+		}else{
+			if(e.from == u){
+				if (!visite[e.to])
+					dfs(g,e.to);
+			}
+		}
 	 }
+   
+   public static void bfs(Graph g, int u){
+	   ArrayList<Integer> parcours = new ArrayList<Integer>();
+	   parcours.add(u);
+	   visite[u] = true;
+	   while(!parcours.isEmpty()){
+		   u = parcours.remove(0);
+		   System.out.println("Je visite "+u);
+		   for(Edge e: g.adj(u)){
+			   if (!visite[e.to]){
+				   parcours.add(e.to);
+				   visite[e.to] = true;
+			   }
+		   }	
+	   }
+	   
+	   
+		   
+   }
 
    
    public static void testGraph()
@@ -46,7 +74,9 @@ class Test
 	   Graph g = new Graph(4*3+2);
 	   g = g.toGraph(tab);
 	   g.writeFile("test_graph");
-	   testGraph();
+	   visite = new boolean[4*3+2];
+	   bfs(g,0);
+	   //testGraph();
 		
 	 }
 }

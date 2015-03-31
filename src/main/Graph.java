@@ -28,7 +28,6 @@ public class Graph
 		Graph g = new Graph(width*height+2);
 		int[][] inter = SeamCarving.interest(itr);
 		for(i = 0 ; i < height; i++){
-			System.out.println("? ? ?");
 			g.addEdge(new Edge(0,i+1,-1,0));
 		}
 		for (i = 0; i < width-1; i++){
