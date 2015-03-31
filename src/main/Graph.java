@@ -18,6 +18,7 @@ public class Graph
 		  adj[v] = new ArrayList<Edge>(8);
 		
 	 }
+
 	public Graph toGraph(int[][] itr){
 		
 		int width = itr[0].length;
@@ -28,11 +29,22 @@ public class Graph
 		int[][] inter = SeamCarving.interest(itr);
 		for(i = 0 ; i < height; i++){
 			System.out.println("? ? ?");
-			g.addEdge(new Edge(0,i+1,1000,0));
+			g.addEdge(new Edge(0,i+1,-1,0));
 		}
 		for (i = 0; i < width-1; i++){
 			for (j = 0; j < height ; j++){
 				g.addEdge(new Edge(width*i+j+1-i, height*(i+1)+j+1, inter[j][i],0));
+				
+				if(j>0){
+					g.addEdge(new Edge(height*(i+1)+j+1, width*i+j-i, -1,0));
+				}
+				
+				g.addEdge(new Edge(height*(i+1)+j+1, width*i+j+1-i, -1,0));
+				
+				if(j!=height-1){
+					g.addEdge(new Edge(height*(i+1)+j+1, width*i+j+1-i+1, -1,0));
+				}
+				//}
 			}
 		}
 		for(i = 0 ; i < height; i++){
