@@ -51,7 +51,10 @@ public class Graph
 		}
 		return g;
 	}
-	
+	/**
+	 * TOTALEMENT INUTILE ONE NE FAIT PAS DE GRAPHE RESIDUEL !!
+	 * @return
+	 */
 	public Graph reduceGraph(){
 		Graph g = this;
 		//for(int i = 0;i < g.adj.length-1;i++){

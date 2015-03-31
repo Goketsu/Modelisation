@@ -22,5 +22,9 @@ class Edge
 		if (this.from == v) return this.to; else return this.from;
 	 }
    
+   public String toString(){
+	   return "from : "+from+", to : "+to+", capa : "+capacity+", used : "+used;
+   }
+   
    
 }
