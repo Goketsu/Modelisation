@@ -6,22 +6,15 @@ class Test
 {
    static boolean visite[];
    public static void dfs(Graph g, int u)
-	 {
+   {
 		visite[u] = true;
 		System.out.println("Je visite " + u);
 		for (Edge e: g.adj(u))
 		  /* Si on prend l'arête dans le bon sens */
-		if(u > 0){
-			if (e.from == u && e.capacity != -1)
+			if(e.from == u)
 				if (!visite[e.to])
 					dfs(g,e.to);
-		}else{
-			if(e.from == u){
-				if (!visite[e.to])
-					dfs(g,e.to);
-			}
-		}
-	 }
+   }	 
    
    public static void bfs(Graph g, int u){
 	   ArrayList<Integer> parcours = new ArrayList<Integer>();
@@ -31,15 +24,16 @@ class Test
 		   u = parcours.remove(0);
 		   System.out.println("Je visite "+u);
 		   for(Edge e: g.adj(u)){
-			   if (!visite[e.to]){
+			   if (!visite[e.to] && e.used != e.capacity){
 				   parcours.add(e.to);
 				   visite[e.to] = true;
 			   }
 		   }	
-	   }
+	   }  
+   }
+   
+   public static void flotMax(Graph g){
 	   
-	   
-		   
    }
 
    
@@ -66,6 +60,21 @@ class Test
 		dfs(g, 3);
 	 }
    
+   public static void testGraph2(){
+	   int n = 3;
+	   int i,j;
+	   Graph g = new Graph(n*n+2);
+	   for(i = 0;i < n-1;i++){
+		   for(j = 0;j< n-1;j++){
+			   g.addEdge(new Edge(j*i, (i+1)+j, 10,5*(i+j)));
+		   }
+	   }
+	   bfs(g,0);
+	   g.writeFile("test_graph2");
+	   g.reduceGraph();
+	   g.writeFile("test_reduce");
+   }
+   
    public static void main(String[] args)
 	 {
 	   int[][] tab = {{3,11,24,39},
@@ -75,7 +84,8 @@ class Test
 	   g = g.toGraph(tab);
 	   g.writeFile("test_graph");
 	   visite = new boolean[4*3+2];
-	   bfs(g,0);
+	   //bfs(g,0);
+	   testGraph2();
 	   //testGraph();
 		
 	 }

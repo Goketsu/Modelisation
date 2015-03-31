@@ -9,7 +9,7 @@ public class Graph
    private final int V;
    int E;
 @SuppressWarnings("unchecked")
-   public Graph(int N)
+	public Graph(int N)
 	 {
 		this.V = N;
 		this.E = 0;
@@ -51,8 +51,29 @@ public class Graph
 		}
 		return g;
 	}
+	
+	public Graph reduceGraph(){
+		Graph g = this;
+		//for(int i = 0;i < g.adj.length-1;i++){
+			//System.out.println("serieux ? "+(g.adj.length-1));
+			//for (Edge e: g.adj(0)){
+		Edge e;
+				for(int i = 0;i<3;i++){
+					e = g.adj(0).get(i);
+				
+				System.out.println("serieusement mec ? "+g.adj(0).get(i));
+				if(e.from <= 0 && e.used > 0){
+					System.out.println("serieusement mec ? ");
+					g.addEdge(new Edge(e.to,e.from,-1,e.used));
+					e.capacity = e.capacity-e.used;
+					e.used = 0;
+				}
+			}
+		//}
+		return g;
+	}
 
-   public int vertices()
+	public int vertices()
 	 {
 		return V;
 	 }
@@ -65,7 +86,7 @@ public class Graph
 		adj[w].add(e);
 	 }
    
-   public final Iterable<Edge> adj(int v)
+   public final ArrayList<Edge> adj(int v)
 	 {
 		return adj[v];
 	 }      
