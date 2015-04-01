@@ -20,21 +20,23 @@ class Test
 	   boolean done = true;
 	   ArrayList<Integer> parcours = new ArrayList<Integer>();
 	   parcours.add(u);
-
+	   
 	   ArrayList<Edge> chemin = new ArrayList<Edge>();
 	   //chemin.add(u);
+	   //System.out.println("test de adj "+(g.getAdjLength()-2));
 	   visite[u] = true;
 	   while(!parcours.isEmpty()){
 		   u = parcours.remove(0);
 		   System.out.println("Je visite "+u);
 		   for(Edge e: g.adj(u)){
-			   //System.out.println(visite[e.to]);
+			   //System.out.println(e.to);
 			   //System.out.println(e.used != e.capacity);
 			   if (!visite[e.to] && e.used != e.capacity){
 				   //System.out.println("yo");
-				   if(e.used < e.capacity || e.from == g.getAdjLength()-1){
+				   if(e.used < e.capacity || e.from == 0){
 					   //System.out.println("hey");
 					   chemin.add(e);
+					   //System.out.println(e);
 				   }
 				   parcours.add(e.to);
 				   visite[e.to] = true;
@@ -42,15 +44,18 @@ class Test
 			   }
 		   }	
 	   }
+	   /*
 	   for(Edge e : chemin){
 		   System.out.println(e);
 	   }
-
+	    */
 	   parcours.removeAll(parcours);
 	   int a = chemin.get((chemin.size())-1).from;
+	   System.out.println("g.adj(21) : "+g.adj(a));
 	   
 	   for(Edge e : g.adj(a)){
 		   if(e.from == chemin.get((chemin.size())-1).from){
+			   //System.out.println("yep");
 			   e.used++;
 		   }
 	   }
@@ -62,37 +67,46 @@ class Test
 		   
 		   for(Edge e : chemin){
 			   if(e.to == a){
+				   //System.out.println("yep "+e);
 				   a = e.from;
 				   e.used++;
 			   }
 		   }
 		   System.out.println(a);
-		   
+		   /*
 		   for(Edge e : g.adj(a)){
 			   if(e.from == chemin.get((chemin.size())-1).from){
+				   System.out.println("ghjykiyjhfdsx");
 				   e.used++;
 			   }
 		   }
+		   */
 		   parcours.add(a);
 		   if(a == 0)
 			 break;//  found = true;
 	   }
+	   
 	   System.out.println("parcours : "+parcours);
+	   
 	   for(boolean b : visite){
+		   System.out.println("SERIEUX "+b);
 		   if(!b){
 			   done = false;
 		   }
 	   }
+	   
+	   //done = visite[g.getAdjLength()-1];
 	   return done;
    }
    
    public static void flotMax(Graph g){
 	   boolean found;
 	   bfs(g,0);
-	   System.out.println(visite[visite.length-1]);
 	   while(visite[visite.length-1]){
 		   System.out.println("premier test");
-		   
+
+		   System.out.println("visited : "+(visite.length-1));
+		   System.out.println("visited : "+visite[visite.length-1]);
 		   for(int i = 0;i < visite.length;i++){
 			   visite[i] = false;
 		   }
@@ -145,19 +159,27 @@ class Test
    
    public static void main(String[] args)
 	 {
-	   int[][] tab = {{3,11,24,39,50},
-				  	  {8,21,29,39,34},
-				  	  {74,80,100,200,87},
-				  	  {57,6,75,3,12}};
+	   int[][] tab = {{3,11,24,39},
+				  	  {8,21,29,39},
+				  	  {74,80,100,200}};
 	   
-	   Graph g = new Graph(4*3+2);
-	   g = g.toGraph(tab);
+	   Graph g = new Graph(4*5+2);
+	   g = g.toGraph2(tab);
+	   visite = new boolean[3*4+2];
+	   
+	   //bfs(g,0);
+	   /*
+	   for(int i = 0;i < visite.length;i++){
+		   visite[i] = false;
+	   }
+	   bfs(g,4*5);
+	   */
 	   /*
 	   for(Edge e : g.edges()){
 		   System.out.println("edge "+e);
 	   }
 	   */
-	   //flotMax(g);
+	   flotMax(g);
 	   //for(int a = 0;a<7;a++){
 	   /*
 	   bfs(g,0);
@@ -165,7 +187,6 @@ class Test
 		   visite[i] = false;
 	   }*/
 	   //}
-	   visite = new boolean[3*5+2];
 	   /*
 	   visite = new boolean[5*5+2];
 	   
@@ -194,7 +215,7 @@ class Test
 		//g.addEdge(new Edge(13,17,1337,0));
 	   */
 	   //flotMax(g);
-	   g.writeFile("test_graph");
+	   g.writeFile("test_graph2");
 	   //testGraph();
 		
 	 }
