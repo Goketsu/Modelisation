@@ -32,7 +32,7 @@ class Test
 			   //System.out.println(e.used != e.capacity);
 			   if (!visite[e.to] && e.used != e.capacity){
 				   //System.out.println("yo");
-				   if(e.used < e.capacity || e.from == 0){
+				   if(e.used < e.capacity || e.from == g.getAdjLength()-1){
 					   //System.out.println("hey");
 					   chemin.add(e);
 				   }
@@ -145,13 +145,18 @@ class Test
    
    public static void main(String[] args)
 	 {
-	   int[][] tab = {{3,11,24,39,150},
-				  	  {8,21,29,39,65},
-				  	  {74,80,100,200,48}};
+	   int[][] tab = {{3,11,24,39,50},
+				  	  {8,21,29,39,34},
+				  	  {74,80,100,200,87},
+				  	  {57,6,75,3,12}};
 	   
-	   Graph g = new Graph(5*3+2);
+	   Graph g = new Graph(4*3+2);
 	   g = g.toGraph(tab);
-	   
+	   /*
+	   for(Edge e : g.edges()){
+		   System.out.println("edge "+e);
+	   }
+	   */
 	   //flotMax(g);
 	   //for(int a = 0;a<7;a++){
 	   /*

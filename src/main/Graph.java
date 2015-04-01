@@ -27,30 +27,30 @@ public class Graph
 		
 		System.out.println("largeur : "+width);
 		System.out.println("hauteur : "+height);
-		
 		Graph g = new Graph(width*height+2);
+		System.out.println("test : "+g.adj.length);
 		int[][] inter = SeamCarving.interest(itr);
 		/*
 		for(i = 0 ; i < height; i++){
 			g.addEdge(new Edge(0,i+1,-1,0));
 		}
 		*/
-		System.out.println("taille : "+width*height+2);
+		System.out.println("taille : "+(width*height+2));
 		for (i = 0; i < width-1; i++){
 			for (j = 0; j < height ; j++){
-					System.out.println("depart : "+(height*i+j)+", j : "+(j)+", i : "+i);
-					System.out.println("arrivee : "+(height*(i+1)+j)+", j : "+(j)+", i : "+i);
+					//System.out.println("depart : "+(height*i+j)+", j : "+(j)+", i : "+i);
+					//System.out.println("arrivee : "+(height*(i+1)+j)+", j : "+(j)+", i : "+i);
 					g.addEdge(new Edge(height*i+j, height*(i+1)+j, inter[j][i],0));
 				//g.addEdge(new Edge(width*i+j+1-i, height*(i+1)+j+1, inter[j][i],0));
 				
 				if(j>0){
-					g.addEdge(new Edge(height*(i+1)+j, height*i+j, -1,0));
+					g.addEdge(new Edge(height*(i+1)+j-1, height*i+j, -1,0));
 				}
 				
-				g.addEdge(new Edge(height*(i+1)+j, height*i+j, -1,0));
+				g.addEdge(new Edge(height*(i+1)+j, height*i+j, -2,0));
 				
 				if(j!=height-1){
-					g.addEdge(new Edge(height*(i+1)+j, height*i+j, -1,0));
+					g.addEdge(new Edge(height*(i+1)+j+1, height*i+j, -3,0));
 				}
 				
 				//}
@@ -63,6 +63,10 @@ public class Graph
 			g.addEdge(new Edge((height*(width-1)+i),width*height+1,inter[i][width-1],0));
 		}
 		return g;
+	}
+	
+	public int getAdjLength(){
+		return this.adj.length;
 	}
 	/**
 	 * TOTALEMENT INUTILE ONE NE FAIT PAS DE GRAPHE RESIDUEL !!
@@ -100,6 +104,7 @@ public class Graph
 		int w = e.to;
 		adj[v].add(e);
 		adj[w].add(e);
+		  // System.out.println("dammit ! "+adj[v]);
 	 }
    
    public final ArrayList<Edge> adj(int v)
@@ -110,11 +115,13 @@ public class Graph
    public final Iterable<Edge> edges()
 	 {
 		ArrayList<Edge> list = new ArrayList<Edge>();
-        for (int v = 0; v < V; v++)
+        for (int v = 0; v < V; v++){
+        	//System.out.println("NOPE ! "+adj(0));
             for (Edge e : adj(v)) {
                 if (e.to != v)
                     list.add(e);
             }
+        }
         return list;
     }
    
