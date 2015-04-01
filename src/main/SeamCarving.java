@@ -151,6 +151,11 @@ public class SeamCarving
 	   int[][] tab = {{3,11,24,39},
 	   				  {8,21,29,39},
 	   				  {74,80,100,200}};
+	   Graph g = new Graph((readpgm("ex1.pgm").length*readpgm("ex1.pgm")[0].length)+2);
+	   //boolean visite[] = new boolean[(readpgm("ex1.pgm").length*readpgm("ex1.pgm")[0].length)+2];
+	   System.out.println("gnoreg "+(476*376+2));
+	   g.toGraph(readpgm("ex1.pgm"));
+	   g.writeFile("test_graph");
 	   
 
 	   writepgm(readpgm("ex1.pgm"),"ex1_test.pgm");

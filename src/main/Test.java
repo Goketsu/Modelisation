@@ -28,8 +28,12 @@ class Test
 		   u = parcours.remove(0);
 		   System.out.println("Je visite "+u);
 		   for(Edge e: g.adj(u)){
+			   //System.out.println(visite[e.to]);
+			   //System.out.println(e.used != e.capacity);
 			   if (!visite[e.to] && e.used != e.capacity){
+				   //System.out.println("yo");
 				   if(e.used < e.capacity || e.from == 0){
+					   //System.out.println("hey");
 					   chemin.add(e);
 				   }
 				   parcours.add(e.to);
@@ -44,11 +48,13 @@ class Test
 
 	   parcours.removeAll(parcours);
 	   int a = chemin.get((chemin.size())-1).from;
+	   
 	   for(Edge e : g.adj(a)){
 		   if(e.from == chemin.get((chemin.size())-1).from){
 			   e.used++;
 		   }
 	   }
+	   
 	   parcours.add(a);
 	   System.out.println(a);
 	   boolean found = false;
@@ -61,12 +67,12 @@ class Test
 			   }
 		   }
 		   System.out.println(a);
-		   /*
+		   
 		   for(Edge e : g.adj(a)){
 			   if(e.from == chemin.get((chemin.size())-1).from){
 				   e.used++;
 			   }
-		   }*/
+		   }
 		   parcours.add(a);
 		   if(a == 0)
 			 break;//  found = true;
@@ -100,7 +106,7 @@ class Test
    
    public static void testGraph()
 	 {
-		int n = 5;
+		int n = 6;
 		int i,j;
 		Graph g = new Graph(n*n+2);
 		
@@ -118,6 +124,7 @@ class Test
 		g.writeFile("test.dot");
 		// dfs à partir du sommet 3
 		visite = new boolean[n*n+2];
+		//flotMax(g)
 		dfs(g, 3);
 	 }
    
@@ -138,13 +145,14 @@ class Test
    
    public static void main(String[] args)
 	 {
-	   int[][] tab = {{3,11,24,39},
-				  {8,21,29,39},
-				  {74,80,100,200}};
-	   Graph g = new Graph(4*3+2);
+	   int[][] tab = {{3,11,24,39,150},
+				  	  {8,21,29,39,65},
+				  	  {74,80,100,200,48}};
+	   
+	   Graph g = new Graph(5*3+2);
 	   g = g.toGraph(tab);
-	   visite = new boolean[4*3+2];
-	   flotMax(g);
+	   
+	   //flotMax(g);
 	   //for(int a = 0;a<7;a++){
 	   /*
 	   bfs(g,0);
@@ -152,8 +160,36 @@ class Test
 		   visite[i] = false;
 	   }*/
 	   //}
+	   visite = new boolean[3*5+2];
+	   /*
+	   visite = new boolean[5*5+2];
+	   
+	   Graph g = new Graph(5*5+2);
+		
+		for (int i = 0; i < 5-1; i++)
+		  for (int j = 0; j < 5 ; j++){
+			g.addEdge(new Edge(5*i+j+1, 5*(i+1)+j+1, 1664 - (i+j),10*j));
+		
+			if(j>0){
+				g.addEdge(new Edge(5*(i+1)+j+1, 5*i+j, -1,0));
+			}
+		
+			g.addEdge(new Edge(5*(i+1)+j+1, 5*i+j+1, -2,0));
+		
+			if(j!=5-1){
+				g.addEdge(new Edge(5*(i+1)+j+1, 5*i+j+2, -3,0));
+			}
+		  }
+		for (int j = 0; j < 5 ; j++)		  
+		  g.addEdge(new Edge(5*5-j, 5*5+1, 666,10*j));
+		
+		for (int j = 0; j < 5 ; j++)					
+		  g.addEdge(new Edge(0, j+1, -1,10*j));
+		
+		//g.addEdge(new Edge(13,17,1337,0));
+	   */
+	   //flotMax(g);
 	   g.writeFile("test_graph");
-	   //testGraph2();
 	   //testGraph();
 		
 	 }
