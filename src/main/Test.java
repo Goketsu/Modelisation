@@ -16,7 +16,7 @@ class Test
 					dfs(g,e.to);
    }	 
    
-   public static boolean bfs(Graph g, int u){
+   public static ArrayList<Integer> bfs(Graph g, int u){
 	   boolean done = true;
 	   ArrayList<Integer> parcours = new ArrayList<Integer>();
 	   parcours.add(u);
@@ -61,16 +61,19 @@ class Test
 	   
 	   
 	   
-	   parcours.add(a);
+	   //parcours.add(a);
 	   //System.out.println("point : "+a);
 	   boolean found = false;
 	   boolean breaking = true;
 	   //if(a != g.getAdjLength()-1){
 	   for(int i = 0; i < visite.length;i++){
-		   System.out.println(i);
+		   if(i%1000 == 0)
+			   System.out.println(i);
+		   
 		   for(Edge e : chemin){
 			   if(e.to == a){
 				   a = e.from;
+				   //parcours.add(a);
 				   e.used++;
 				   //breaking = false;
 				   //System.out.println("yep "+e);
@@ -91,13 +94,14 @@ class Test
 			   }
 		   }
 		   */
-		   parcours.add(a);
+		   //parcours.add(a);
 		   if(a == 0)
 			 break;//  found = true;
 	   }
 	   //}
 	   //a = chemin.get((chemin.size())-1).from;
 	   a = g.getAdjLength()-1;
+	   
 	   //a = chemin.get(g.getAdjLength()-1).from;
 	   //System.out.println("a : "+a);
 	   //System.out.println("test "+parcours.contains(g.getAdjLength()-1));
@@ -119,6 +123,10 @@ class Test
 		   }
 	   }
 	   */
+	   for(int i = 0;i < visite.length;i++){
+		   if(visite[i])
+			   parcours.add(i);
+	   }
 	   //System.out.println("parcours : "+parcours);
 	   System.out.println("j'ai ajouté les used");
 	   for(boolean b : visite){
@@ -130,7 +138,7 @@ class Test
 	   
 	   done = visite[g.getAdjLength()-1];
 	   //System.out.println("done ? "+done);
-	   return done;
+	   return parcours;
    }
    
    public static void flotMax(Graph g){
@@ -139,13 +147,13 @@ class Test
 	   while(visite[visite.length-1]){
 		   System.out.println("Flot");
 
+		   found = visite[g.getAdjLength()-1];
 		   //System.out.println("visited : "+(visite.length-1));
 		   //System.out.println("visited : "+visite[visite.length-1]);
 		   for(int i = 0;i < visite.length;i++){
 			   visite[i] = false;
 		   }
-		   found = bfs(g,0);
-		   
+		   bfs(g,0);
 		   //found = bfs(g,0);
 		   //System.out.println("deuxieme test "+found);
 	   }
@@ -176,6 +184,65 @@ class Test
 		dfs(g, 3);
 	 }
    
+   public static int[][] cut(Graph g, int[][] tab){
+	   ArrayList<Integer> parcours = bfs(g,0);
+	   ArrayList<Integer> toDelete = new ArrayList<Integer>();
+	   for(int a : parcours){
+		   for(Edge e : g.adj(a)){
+			   if(e.used == e.capacity)
+				   toDelete.add(a);
+		   }
+	   }
+	   int[][] resultat = new int[tab.length][tab[0].length-1];
+	   System.out.println("parcours : "+parcours);
+	   System.out.println("to delete : "+toDelete);
+	   for(int i = 0;i < tab.length;i++){
+		   for(int j = 0;j < tab[0].length;j++){
+			   System.out.println("val : "+tab[i][j]+", i : "+i+", j : "+j);
+			   System.out.println("test : "+(j*tab.length+1+i));
+		   }
+	   }
+	   //System.out.println("tableau : "+tab);
+	   /*
+	   for(int i = tab.length;i > 0;i--){
+		   System.out.println(parcours.get(parcours.size()-i));
+		   toDelete.add(parcours.get(parcours.size()-i));
+		   parcours.remove(parcours.size()-i);
+	   }
+	   */
+	   int a,b;
+	   boolean yep = false;
+	   //a = toDelete.get(2)/tab.length;
+	   //b = toDelete.get(2)/tab.length-1;
+	   System.out.println("parcours : "+parcours);
+	   System.out.println("to delete : "+toDelete);
+	   for(int i = 0;i < tab.length;i++){
+		   yep = false;
+		   for(int j = 0;j < tab[0].length;j++){
+			   System.out.println("val : "+tab[i][j]+", i : "+i+", j : "+j);
+			   //if(j != resultat[0].length)
+			   
+			   if(!toDelete.contains(j*tab.length+1+i)){
+				   System.out.println("ready ? "+tab[i][j]);
+				   System.out.println("yep : "+yep);
+				   if(yep){
+					   resultat[i][j-1] = tab[i][j];
+				   }else{
+					   resultat[i][j]= tab[i][j];
+				   }
+			   }else{
+				   yep = true;
+			   }
+			   //if(toDelete.contains(tab[i][j]))
+				//   System.out.println("on y est presque "+tab[i][j]);
+		   }
+	   }
+	   System.out.println("width ? : "+resultat[0].length);
+	   System.out.println("height ? : "+resultat.length);
+	   //System.out.println("tableau : "+tab);
+	   return resultat;
+   }
+   
    public static void testGraph2(){
 	   int n = 3;
 	   int i,j;
@@ -193,22 +260,39 @@ class Test
    
    public static void main(String[] args)
 	 {
-	   int[][] tab = {{3,11,24,39},
-				  	  {8,21,29,39},
-				  	  {74,80,100,200}};
+	   int[][] tab = {{3,11,24,39,54},
+				  	  {8,21,29,39,68},
+				  	  {74,80,100,200,9},
+				  	  {8,21,29,39,68}
+				  	  };
 	   
-	   //Graph g = new Graph(3*4+2);
-	   //g = g.toGraph2(tab);
-	   //visite = new boolean[3*4+2];
-
+	   Graph g = new Graph(tab.length*tab[0].length+2);
+	   g = g.toGraph2(SeamCarving.interest(tab));
+	   visite = new boolean[tab.length*tab[0].length+2];
+	   /*
 	   Graph g = new Graph((SeamCarving.readpgm("ex1.pgm").length*SeamCarving.readpgm("ex1.pgm")[0].length)+2);
 	   visite = new boolean[(SeamCarving.readpgm("ex1.pgm").length*SeamCarving.readpgm("ex1.pgm")[0].length)+2];
 
 	   System.out.println("gnoreg "+SeamCarving.readpgm("ex1.pgm")[0].length);
 	   g = g.toGraph2(SeamCarving.interest(SeamCarving.readpgm("ex1.pgm")));
-	   //Test.flotMax(g);
-	   bfs(g,0);
+	   */
+	   flotMax(g);
+	   
+	   int[][] res = cut(g,SeamCarving.interest(tab));
+	   for(int i = 0;i < res.length;i++){
+		   for(int j = 0;j < res[0].length;j++){
+			   System.out.println("val : "+res[i][j]+", i : "+i+", j : "+j);
+		   }
+	   }
+	   
+	   Graph g2 = new Graph(res.length*res[0].length+2);
+	   g2 = g2.toGraph2(res);
+	   g2.writeFile("test_graph_bitcj_cut");
+	   SeamCarving.writepgm(res,"test_cut.pgm");
+	   
+	   //bfs(g,0);
 	   g.writeFile("test_graph_bitch");
+	   SeamCarving.writepgm(tab, "test.pgm");
 	   /*
 	   for(int i = 0;i < visite.length;i++){
 		   visite[i] = false;
