@@ -260,14 +260,30 @@ class Test
    
    public static void main(String[] args)
 	 {
-	   /*
+	   
 	   int[][] tab = {{3,11,24,39,54},
 				  	  {8,21,29,39,68},
 				  	  {74,80,100,200,9},
 				  	  {8,21,29,39,68}
 				  	  };
-	   */
-	   int[][] tab = SeamCarving.readpgm("ex1.pgm");
+	   
+	   // Aurait du fonctionner
+	   if(args[0] == null){
+		   System.out.println("Vous n'avez pas proposez d'argument");
+		   System.out.println("Le programme va s'executer sur ex1.pgm");
+		   tab = SeamCarving.readpgm("ex1.pgm");
+	   }else{
+		   if (args[0].matches("[a-zA-Z]*[0-9]*\\.(pgm)")){
+			   System.out.println("Le format du fichier est correcte!");
+			   System.out.println(args[0]);
+			   tab = SeamCarving.readpgm(args[0]);
+		   }else{
+			   System.out.println("Le fichier doit etre ex1.pgm, ex2.pgm ou ex3.pgm");
+			   System.exit(1);
+		   }
+	   }
+	   
+	   //int[][] tab = SeamCarving.readpgm("ex.pgm");
 	   Graph g = new Graph(tab.length*tab[0].length+2);
 	   g = g.toGraph(SeamCarving.interest(tab));
 	   visite = new boolean[tab.length*tab[0].length+2];

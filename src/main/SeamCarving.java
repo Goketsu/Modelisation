@@ -147,19 +147,4 @@ public class SeamCarving
 	   return sb.toString();
    }
 
-
-   /*
-   public static void main(String[] args){
-   
-	   if(args[0] == null){
-		   System.out.println("probleme");
-	   }else{
-		   System.out.println(args[0]);
-	   }
-	   String path = args[0];
-	   writepgm(interest(readpgm(path)),"ex1_test.pgm");
-	   
-	   
-   }
-*/
 }
