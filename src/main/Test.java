@@ -28,7 +28,7 @@ class Test
 	   //System.out.println("taille visite : "+visite.length);
 	   visite[u] = true;
 	   while(!parcours.isEmpty()){
-		   u = parcours.remove(0);
+		   u = parcours.remove(parcours.size()-1);
 		   //System.out.println("Je visite "+u);
 		   for(Edge e: g.adj(u)){
 			   //System.out.println(e.to);
@@ -44,7 +44,13 @@ class Test
 				   visite[e.to] = true;
 				   //e.used++;
 			   }
+			   if(visite[g.getAdjLength()-1]){
+				   break;
+			   }
 		   }	
+		   if(visite[g.getAdjLength()-1]){
+			   break;
+		   }
 	   }
 	   /*
 	   for(Edge e : chemin){
@@ -67,7 +73,7 @@ class Test
 	   boolean breaking = true;
 	   //if(a != g.getAdjLength()-1){
 	   for(int i = 0; i < visite.length;i++){
-		   if(i%1000 == 0)
+		   if(i%10000 == 0)
 			   System.out.println(i);
 		   
 		   for(Edge e : chemin){
@@ -243,41 +249,25 @@ class Test
 	   return resultat;
    }
    
-   public static void testGraph2(){
-	   int n = 3;
-	   int i,j;
-	   Graph g = new Graph(n*n+2);
-	   for(i = 0;i < n-1;i++){
-		   for(j = 0;j< n-1;j++){
-			   g.addEdge(new Edge(j*i, (i+1)+j, 10,5*(i+j)));
-		   }
-	   }
-	   bfs(g,0);
-	   g.writeFile("test_graph2");
-	   g.reduceGraph();
-	   g.writeFile("test_reduce");
-   }
    
    public static void main(String[] args)
 	 {
+	   /*
 	   int[][] tab = {{3,11,24,39,54},
 				  	  {8,21,29,39,68},
 				  	  {74,80,100,200,9},
 				  	  {8,21,29,39,68}
 				  	  };
-	   
-	   Graph g = new Graph(tab.length*tab[0].length+2);
-	   g = g.toGraph2(SeamCarving.interest(tab));
-	   visite = new boolean[tab.length*tab[0].length+2];
-	   /*
-	   Graph g = new Graph((SeamCarving.readpgm("ex1.pgm").length*SeamCarving.readpgm("ex1.pgm")[0].length)+2);
-	   visite = new boolean[(SeamCarving.readpgm("ex1.pgm").length*SeamCarving.readpgm("ex1.pgm")[0].length)+2];
-
-	   System.out.println("gnoreg "+SeamCarving.readpgm("ex1.pgm")[0].length);
-	   g = g.toGraph2(SeamCarving.interest(SeamCarving.readpgm("ex1.pgm")));
 	   */
-	   flotMax(g);
+	   int[][] tab = SeamCarving.readpgm("ex1.pgm");
+	   Graph g = new Graph(tab.length*tab[0].length+2);
+	   g = g.toGraph(SeamCarving.interest(tab));
+	   visite = new boolean[tab.length*tab[0].length+2];
 	   
+	   //bfs(g,0);
+	   flotMax(g);
+	   g.writeFile("test_ex1");
+	   /*
 	   int[][] res = cut(g,SeamCarving.interest(tab));
 	   for(int i = 0;i < res.length;i++){
 		   for(int j = 0;j < res[0].length;j++){
@@ -286,62 +276,14 @@ class Test
 	   }
 	   
 	   Graph g2 = new Graph(res.length*res[0].length+2);
-	   g2 = g2.toGraph2(res);
-	   g2.writeFile("test_graph_bitcj_cut");
+	   g2 = g2.toGraph(res);
+	   g2.writeFile("test_graph_cut");
 	   SeamCarving.writepgm(res,"test_cut.pgm");
 	   
 	   //bfs(g,0);
-	   g.writeFile("test_graph_bitch");
+	   g.writeFile("test_graph");
 	   SeamCarving.writepgm(tab, "test.pgm");
-	   /*
-	   for(int i = 0;i < visite.length;i++){
-		   visite[i] = false;
-	   }
-	   bfs(g,4*5);
 	   */
-	   /*
-	   for(Edge e : g.edges()){
-		   System.out.println("edge "+e);
-	   }
-	   */
-	   //flotMax(g);
-	   //for(int a = 0;a<7;a++){
-	   /*
-	   bfs(g,0);
-	   for(int i = 0;i < visite.length;i++){
-		   visite[i] = false;
-	   }*/
-	   //}
-	   /*
-	   visite = new boolean[5*5+2];
-	   
-	   Graph g = new Graph(5*5+2);
-		
-		for (int i = 0; i < 5-1; i++)
-		  for (int j = 0; j < 5 ; j++){
-			g.addEdge(new Edge(5*i+j+1, 5*(i+1)+j+1, 1664 - (i+j),10*j));
-		
-			if(j>0){
-				g.addEdge(new Edge(5*(i+1)+j+1, 5*i+j, -1,0));
-			}
-		
-			g.addEdge(new Edge(5*(i+1)+j+1, 5*i+j+1, -2,0));
-		
-			if(j!=5-1){
-				g.addEdge(new Edge(5*(i+1)+j+1, 5*i+j+2, -3,0));
-			}
-		  }
-		for (int j = 0; j < 5 ; j++)		  
-		  g.addEdge(new Edge(5*5-j, 5*5+1, 666,10*j));
-		
-		for (int j = 0; j < 5 ; j++)					
-		  g.addEdge(new Edge(0, j+1, -1,10*j));
-		
-		//g.addEdge(new Edge(13,17,1337,0));
-	   */
-	   //flotMax(g);
-	   //g.writeFile("test_graph2");
-	   //testGraph();
 		
 	 }
 }

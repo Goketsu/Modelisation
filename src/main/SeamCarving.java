@@ -147,22 +147,14 @@ public class SeamCarving
 	   return sb.toString();
    }
 
-   public static void main(String[] args){// throws FileNotFoundException
-	   int[][] tab = {{3,11,24,39},
-	   				  {8,21,29,39},
-	   				  {74,80,100,200}};
-	   Graph g = new Graph((readpgm("ex1.pgm").length*readpgm("ex1.pgm")[0].length)+2);
-	   boolean visite[] = new boolean[(readpgm("ex1.pgm").length*readpgm("ex1.pgm")[0].length)+2];
-	   System.out.println("gnoreg "+readpgm("ex1.pgm")[0].length);
-	   g = g.toGraph(interest(readpgm("ex1.pgm")));
-	   Test.flotMax(g);
-	   //System.out.println("essai "+g.adj(0).get(0));
-	   g.writeFile("test_graph");
+
+   
+   public static void main(String[] args){
+   
+	   String path = args[0];
+	   writepgm(interest(readpgm(path)),"ex1_test.pgm");
 	   
-	   /*
-	   writepgm(readpgm("ex1.pgm"),"ex1_test.pgm");
-	   writepgm(interest(tab),"test.pgm");
-	   writepgm(interest(readpgm("ex1.pgm")),"ex1_interest.pgm");
-	   */
+	   
    }
+
 }
