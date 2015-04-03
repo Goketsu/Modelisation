@@ -68,7 +68,7 @@ public class Graph
 			//}
 		}
 	}
-	System.out.println("nb : " + nb);
+	//System.out.println("nb : " + nb);
 	//System.out.println("\n");
 	
 	for(i = 1 ; i <= height; i++){

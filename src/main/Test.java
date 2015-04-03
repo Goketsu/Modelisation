@@ -52,18 +52,20 @@ class Test
 			   break;
 		   }
 	   }
-	   /*
+	   
 	   for(Edge e : chemin){
-		   System.out.println(e);
+		   if(visite[g.getAdjLength()-1])
+		   e.used++;
+		   //System.out.println(e);
 	   }
-	    */
+	   
 	   parcours.removeAll(parcours);
 	   int a = g.getAdjLength()-1;
 	   //int a = chemin.get((chemin.size())-1).from;
 	   //System.out.println("g.adj(21) : "+g.adj(a));
 	   //System.out.println("dernier du chemin : "+chemin.get((chemin.size())-1));
 	   //System.out.println("chemin : "+chemin);
-	   System.out.println("je suis dans le bfs");
+	   //System.out.println("je suis dans le bfs");
 	   
 	   
 	   
@@ -72,6 +74,7 @@ class Test
 	   boolean found = false;
 	   boolean breaking = true;
 	   //if(a != g.getAdjLength()-1){
+	   /*
 	   for(int i = 0; i < visite.length;i++){
 		   if(i%10000 == 0)
 			   System.out.println(i);
@@ -101,9 +104,11 @@ class Test
 		   }
 		   */
 		   //parcours.add(a);
+	   /*
 		   if(a == 0)
 			 break;//  found = true;
 	   }
+   */
 	   //}
 	   //a = chemin.get((chemin.size())-1).from;
 	   a = g.getAdjLength()-1;
@@ -134,7 +139,7 @@ class Test
 			   parcours.add(i);
 	   }
 	   //System.out.println("parcours : "+parcours);
-	   System.out.println("j'ai ajouté les used");
+	   //System.out.println("j'ai ajouté les used");
 	   for(boolean b : visite){
 		   //System.out.println("SERIEUX "+b);
 		   if(!b){
@@ -151,7 +156,7 @@ class Test
 	   boolean found;
 	   bfs(g,0);
 	   while(visite[visite.length-1]){
-		   System.out.println("Flot");
+		   //System.out.println("Flot");
 
 		   found = visite[g.getAdjLength()-1];
 		   //System.out.println("visited : "+(visite.length-1));
@@ -195,19 +200,21 @@ class Test
 	   ArrayList<Integer> toDelete = new ArrayList<Integer>();
 	   for(int a : parcours){
 		   for(Edge e : g.adj(a)){
-			   if(e.used == e.capacity)
+			   if(e.from == a && e.used == e.capacity && e.capacity > 0)
 				   toDelete.add(a);
 		   }
 	   }
 	   int[][] resultat = new int[tab.length][tab[0].length-1];
-	   System.out.println("parcours : "+parcours);
-	   System.out.println("to delete : "+toDelete);
+	   //System.out.println("parcours : "+parcours);
+	   //System.out.println("to delete : "+toDelete);
+	   /*
 	   for(int i = 0;i < tab.length;i++){
 		   for(int j = 0;j < tab[0].length;j++){
 			   System.out.println("val : "+tab[i][j]+", i : "+i+", j : "+j);
 			   System.out.println("test : "+(j*tab.length+1+i));
 		   }
 	   }
+	   */
 	   //System.out.println("tableau : "+tab);
 	   /*
 	   for(int i = tab.length;i > 0;i--){
@@ -220,17 +227,16 @@ class Test
 	   boolean yep = false;
 	   //a = toDelete.get(2)/tab.length;
 	   //b = toDelete.get(2)/tab.length-1;
-	   System.out.println("parcours : "+parcours);
-	   System.out.println("to delete : "+toDelete);
-	   for(int i = 0;i < tab.length;i++){
+	   //System.out.println("parcours : "+parcours);
+	   for(int i = 0;i < resultat.length;i++){
 		   yep = false;
-		   for(int j = 0;j < tab[0].length;j++){
-			   System.out.println("val : "+tab[i][j]+", i : "+i+", j : "+j);
+		   for(int j = 0;j < resultat[0].length;j++){
+			   //System.out.println("val : "+tab[i][j]+", i : "+i+", j : "+j);
 			   //if(j != resultat[0].length)
 			   
-			   if(!toDelete.contains(j*tab.length+1+i)){
-				   System.out.println("ready ? "+tab[i][j]);
-				   System.out.println("yep : "+yep);
+			   if(!toDelete.contains((j)*tab.length+1+i)){
+				   //System.out.println("ready ? "+tab[i][j]);
+				   //System.out.println("yep : "+yep);
 				   if(yep){
 					   resultat[i][j-1] = tab[i][j];
 				   }else{
@@ -243,8 +249,10 @@ class Test
 				//   System.out.println("on y est presque "+tab[i][j]);
 		   }
 	   }
-	   System.out.println("width ? : "+resultat[0].length);
-	   System.out.println("height ? : "+resultat.length);
+	   //System.out.println("to delete : "+toDelete.size());
+	   //System.out.println("parcours : "+parcours.size());
+	   //System.out.println("width ? : "+resultat[0].length);
+	   //System.out.println("height ? : "+resultat.length);
 	   //System.out.println("tableau : "+tab);
 	   return resultat;
    }
@@ -266,24 +274,39 @@ class Test
 	   
 	   //bfs(g,0);
 	   flotMax(g);
-	   g.writeFile("test_ex1");
+	   
+	   //g.writeFile("test2_ex1");
+	   
+	   int[][] res = cut(g,tab);
+	   Graph g2 = new Graph(res.length*res[0].length+2);
+	   g2 = g2.toGraph(res);
+	   
+	   for(int i = 0;i < 49;i++){
+		   System.out.println("ITERATION "+i);
+		   Graph g3 = new Graph(res.length*res[0].length+2);
+		   g3 = g3.toGraph(SeamCarving.interest(res));
+		   visite = new boolean[res.length*res[0].length+2];
+		   flotMax(g3);
+		   res = cut(g3,res);
+		   g3 = new Graph(res.length*res[0].length+2);
+		   g3 = g3.toGraph(res);
+	   }
+	   
 	   /*
-	   int[][] res = cut(g,SeamCarving.interest(tab));
 	   for(int i = 0;i < res.length;i++){
 		   for(int j = 0;j < res[0].length;j++){
 			   System.out.println("val : "+res[i][j]+", i : "+i+", j : "+j);
 		   }
 	   }
-	   
-	   Graph g2 = new Graph(res.length*res[0].length+2);
-	   g2 = g2.toGraph(res);
+	   */
 	   g2.writeFile("test_graph_cut");
 	   SeamCarving.writepgm(res,"test_cut.pgm");
 	   
 	   //bfs(g,0);
 	   g.writeFile("test_graph");
 	   SeamCarving.writepgm(tab, "test.pgm");
-	   */
-		
+	   
+		System.out.println("termine ");
 	 }
+
 }
