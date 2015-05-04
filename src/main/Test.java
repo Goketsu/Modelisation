@@ -14,7 +14,7 @@ class Test
 			if(e.from == u)
 				if (!visite[e.to])
 					dfs(g,e.to);
-   }	 
+   }
    
    public static ArrayList<Integer> bfs(Graph g, int u){
 	   boolean done = true;
@@ -255,6 +255,78 @@ class Test
 	   //System.out.println("height ? : "+resultat.length);
 	   //System.out.println("tableau : "+tab);
 	   return resultat;
+   }	 
+   
+   public static int[][] rotateLeft(int[][] tab){
+	   int width = tab[0].length;
+	   int height = tab.length;
+	   System.out.println("largeur : "+width);
+	   System.out.println("hauteur : "+height);
+	   int[][] tab2 = new int[width][height];
+	   for (int i = 0; i < width; i++){
+			for (int j = 0; j < height ; j++){
+				//System.out.println("i : "+i+", j : "+j);
+				//System.out.println("tab 1 : "+tab[i][j]);
+				tab2[i][j] = 
+						tab[j][width-i-1];
+				//System.out.println("tab 2 : "+tab2[i][j]);
+			}
+	   }
+	   System.out.println("largeur 2 : "+tab2[0].length);
+	   System.out.println("hauteur 2 : "+tab2.length);
+	   return tab2;
+   }
+   
+   public static int[][] rotateRight(int[][] tab){
+	   int width = tab[0].length;
+	   int height = tab.length;
+	   System.out.println("largeur : "+width);
+	   System.out.println("hauteur : "+height);
+	   int[][] tab2 = new int[width][height];
+	   for (int i = 0; i < width; i++){
+			for (int j = 0; j < height ; j++){
+				tab2[i][j] = tab[height-j-1][i];
+				//System.out.println("tab 2 : "+tab2[i][j]);
+			}
+	   }
+	   System.out.println("largeur 2 : "+tab2[0].length);
+	   System.out.println("hauteur 2 : "+tab2.length);
+	   return tab2;
+   }
+   
+   public static void cutLine(){
+
+	   int[][] tab = SeamCarving.readpgm("ex1.pgm");
+	   tab = Test.rotateLeft(tab);
+	   Graph g = new Graph(tab.length*tab[0].length+2);
+	   int[][] res = tab;
+	   Graph g2 = new Graph(res.length*res[0].length+2);
+	   for(int i = 0;i < 10; i++){
+		   System.out.println("ITERATION "+i);
+		   g = new Graph(res.length*res[0].length+2);
+		   g = g.toGraph(SeamCarving.interest(res));
+		   visite = new boolean[res.length*res[0].length+2];
+	   
+		   //bfs(g,0);
+		   flotMax(g);
+	   
+		   //g.writeFile("test2_ex1");
+	   
+		   res = cut(g,res);
+		   g2 = new Graph(res.length*res[0].length+2);
+		   g2 = g2.toGraph(res);
+	   }
+	   res = Test.rotateRight(res);
+	   
+
+	   g2.writeFile("test_graph_cutLine");
+	   SeamCarving.writepgm(res,"test_cutLine.pgm");
+	   
+	   //bfs(g,0);
+	   g.writeFile("test_graph");
+	   SeamCarving.writepgm(tab, "test.pgm");
+	   
+	   System.out.println("termine ");
    }
    
    
@@ -266,6 +338,21 @@ class Test
 				  	  {74,80,100,200,9},
 				  	  {8,21,29,39,68}
 				  	  };
+	   
+	   //Test.cutLine();
+	   
+	   /*
+	   int[][] tab2 = Test.rotateRight(tab);
+	   
+	   int[][] tab3 = SeamCarving.readpgm("ex1.pgm");
+	   tab3 = Test.rotateRight(tab3);
+	   SeamCarving.writepgm(tab3, "testRotate.pgm");
+	   
+	   System.out.println("avant : " + tab[0][1]);
+	   System.out.println("apres : "+tab2[0][1]);
+	   */
+	   
+	   
 	   
 	   // Aurait du fonctionner
 	   if(args[0] == null){
@@ -297,7 +384,7 @@ class Test
 	   Graph g2 = new Graph(res.length*res[0].length+2);
 	   g2 = g2.toGraph(res);
 	   
-	   for(int i = 0;i < 49;i++){
+	   for(int i = 0;i < 14;i++){
 		   System.out.println("ITERATION "+i);
 		   Graph g3 = new Graph(res.length*res[0].length+2);
 		   g3 = g3.toGraph(SeamCarving.interest(res));
@@ -315,6 +402,8 @@ class Test
 		   }
 	   }
 	   */
+	   
+	   
 	   g2.writeFile("test_graph_cut");
 	   SeamCarving.writepgm(res,"test_cut.pgm");
 	   
@@ -322,7 +411,9 @@ class Test
 	   g.writeFile("test_graph");
 	   SeamCarving.writepgm(tab, "test.pgm");
 	   
-		System.out.println("termine ");
+	   System.out.println("termine ");
+		
+		
 	 }
 
 }
