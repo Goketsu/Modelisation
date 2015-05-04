@@ -99,6 +99,67 @@ public class SeamCarving
 	  
    }
    
+   public static void writeppm(RGB[][] image, String filename)// throws FileNotFoundException{
+   {		
+        try {
+        	File file = new File(filename);
+        	if(file.createNewFile()){
+        		System.out.println("file created");
+        	}else{
+        		System.out.println("file already exists");
+        	}
+        	FileWriter fw = new FileWriter(file.getAbsoluteFile());
+        	BufferedWriter writer = new BufferedWriter(fw);
+        	//BufferedImage bi = new BufferedImage(200,300,BufferedImage.TYPE_3BYTE_BGR);
+        	//ImageIO.write(bi, "png", file);
+        	
+        	int width = image[0].length;
+    	    int height = image.length;
+    	    
+        	writer.write("P3 \n");
+        	writer.write(width + " " + height+"\n");
+        	writer.write("255 \n");
+        	
+        	// print out the data, limiting the line lengths to 70 characters
+        	int lineLength = 0;
+    	    for (int i = 0; i < height; ++i)
+    	    {
+    	      for (int j = 0; j < width; ++j)
+    	      {
+    	        int valueR = image[i][j].r;
+    	        int valueG = image[i][j].g;
+    	        int valueB = image[i][j].b;
+    	        
+    	        // if we are going over 80 characters on a line,
+    	        // start a new line
+    	        String stringValue = "" + valueR;
+    	        int currentLength = stringValue.length() + 1;
+    	        if (currentLength + lineLength > 80)
+    	        {
+    	          writer.write("\n");;
+    	          lineLength = 0;
+    	        }
+    	        lineLength += currentLength;
+    	        writer.write(valueR + " ");
+    	        writer.write(valueG + " ");
+    	        writer.write(valueB + " ");
+    	      }
+    	    }
+        	
+        	writer.close();
+        	
+        	System.out.println("DONE");
+        }
+        
+        catch(Throwable t) {
+            t.printStackTrace(System.err) ;
+            //return null;
+        }
+        
+   
+  
+}
+   
    public static int[][] interest (int[][] image){
 	   
 	   
@@ -147,4 +208,13 @@ public class SeamCarving
 	   return sb.toString();
    }
 
+   
+   public static void main(String[] args){
+	   RGB[][] tab = {{new RGB(255,255,255),new RGB(0,0,0)},
+	          	  	  {new RGB(255,0,0),new RGB(255,255,0)},
+	          	  	  {new RGB(0,255,0),new RGB(0,255,255)},
+	          	  	  {new RGB(0,0,255),new RGB(255,0,255)}};
+	   
+	   writeppm(tab,"test_couleur");
+   }
 }
