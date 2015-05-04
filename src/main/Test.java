@@ -170,6 +170,54 @@ class Test
 	   }
    }
 
+   public static ArrayList<Integer> parcoursLigneGraph(Graph g, int[][] tab){
+	   ArrayList<Integer> toDelete = new ArrayList<Integer>();
+	   
+
+	   ArrayList<Integer> parcours = new ArrayList<Integer>();
+	   //parcours.add(0);
+	   int u = 0;
+	   visite = new boolean[tab.length*tab[0].length+2];
+	   visite[u] = true;
+	   ArrayList<Edge> chemin = new ArrayList<Edge>();
+	   //System.out.println(g.adj(u).get(0));
+	   for(int i = 0;i < tab.length;i++){
+		   System.out.println("HFUIZHFIUHGZF : "+g.adj(0).get(i).to);
+		   chemin.add(g.adj(0).get(i));
+		   parcours.add(g.adj(0).get(i).to);
+		   while(!parcours.isEmpty()){
+			   u = parcours.remove(parcours.size()-1);
+			   System.out.println("Je visite "+u);
+			   for(Edge e: g.adj(u)){
+				   System.out.println(e.to);
+				   System.out.println(e.used != e.capacity);
+				   if (!visite[e.to] && e.used != e.capacity && e.capacity >= 0){
+					   chemin.add(e);
+					   System.out.println("tralala : "+e.to);
+					   parcours.add(e.to);
+					   visite[e.to] = true;
+					   //e.used++;
+				   }
+				   if(visite[g.getAdjLength()-1]){
+					   break;
+				   }
+			   }	
+			   if(visite[g.getAdjLength()-1]){
+				   break;
+			   }
+		   }
+		   for(Edge e : chemin){
+			   System.out.println("chemin : "+e);
+		   }
+		   toDelete.add(chemin.get(chemin.size()-1).to);
+		   parcours.removeAll(parcours);
+		   chemin.removeAll(chemin);
+	   }
+	   for(Integer a : toDelete){
+		   System.out.println("a suppr : "+a);
+	   }
+	   return toDelete;
+   }
    
    public static void testGraph()
 	 {
@@ -200,10 +248,22 @@ class Test
 	   ArrayList<Integer> toDelete = new ArrayList<Integer>();
 	   for(int a : parcours){
 		   for(Edge e : g.adj(a)){
-			   if(e.from == a && e.used == e.capacity && e.capacity > 0)
+			   if(e.from == a && e.used == e.capacity/* && e.capacity > 0 */&& !toDelete.contains(a)){
+				   for(int i = 1;i < tab[0].length;i++){
+					   if(toDelete.contains(a - tab.length*i)){
+						   //System.out.println("yolo");
+						   toDelete.remove(toDelete.indexOf(a - tab.length*i));
+					   }
+				   }
 				   toDelete.add(a);
+			   }
 		   }
 	   }
+	   /*
+	   for(Integer a : toDelete){
+		   System.out.println("a suppr : "+a);
+	   }
+	   */
 	   int[][] resultat = new int[tab.length][tab[0].length-1];
 	   //System.out.println("parcours : "+parcours);
 	   //System.out.println("to delete : "+toDelete);
@@ -249,8 +309,8 @@ class Test
 				//   System.out.println("on y est presque "+tab[i][j]);
 		   }
 	   }
-	   //System.out.println("to delete : "+toDelete.size());
-	   //System.out.println("parcours : "+parcours.size());
+	   System.out.println("to delete : "+toDelete.size());
+	   System.out.println("parcours : "+parcours.size());
 	   //System.out.println("width ? : "+resultat[0].length);
 	   //System.out.println("height ? : "+resultat.length);
 	   //System.out.println("tableau : "+tab);
@@ -297,8 +357,10 @@ class Test
    public static void cutLine(){
 
 	   int[][] tab = SeamCarving.readpgm("ex1.pgm");
-	   tab = Test.rotateLeft(tab);
 	   Graph g = new Graph(tab.length*tab[0].length+2);
+	   g.writeFile("test_graph");
+	   SeamCarving.writepgm(tab, "test.pgm");
+	   tab = Test.rotateLeft(tab);
 	   int[][] res = tab;
 	   Graph g2 = new Graph(res.length*res[0].length+2);
 	   for(int i = 0;i < 10; i++){
@@ -323,8 +385,6 @@ class Test
 	   SeamCarving.writepgm(res,"test_cutLine.pgm");
 	   
 	   //bfs(g,0);
-	   g.writeFile("test_graph");
-	   SeamCarving.writepgm(tab, "test.pgm");
 	   
 	   System.out.println("termine ");
    }
@@ -339,8 +399,14 @@ class Test
 				  	  {8,21,29,39,68}
 				  	  };
 	   
-	   //Test.cutLine();
-	   
+	   Test.cutLine();
+/*
+	   visite = new boolean[tab.length*tab[0].length+2];
+	   Graph g = new Graph(tab.length*tab[0].length+2);
+	   g = g.toGraph(SeamCarving.interest(tab));
+	   flotMax(g);
+	   Test.parcoursLigneGraph(g,tab);
+	   */
 	   /*
 	   int[][] tab2 = Test.rotateRight(tab);
 	   
@@ -353,7 +419,7 @@ class Test
 	   */
 	   
 	   
-	   
+	   /*
 	   // Aurait du fonctionner
 	   if(args[0] == null){
 		   System.out.println("Vous n'avez pas proposez d'argument");
@@ -371,6 +437,8 @@ class Test
 	   }
 	   
 	   //int[][] tab = SeamCarving.readpgm("ex.pgm");
+	   
+	   
 	   Graph g = new Graph(tab.length*tab[0].length+2);
 	   g = g.toGraph(SeamCarving.interest(tab));
 	   visite = new boolean[tab.length*tab[0].length+2];
@@ -383,7 +451,9 @@ class Test
 	   int[][] res = cut(g,tab);
 	   Graph g2 = new Graph(res.length*res[0].length+2);
 	   g2 = g2.toGraph(res);
+	   */
 	   
+	   /*
 	   for(int i = 0;i < 14;i++){
 		   System.out.println("ITERATION "+i);
 		   Graph g3 = new Graph(res.length*res[0].length+2);
@@ -394,7 +464,7 @@ class Test
 		   g3 = new Graph(res.length*res[0].length+2);
 		   g3 = g3.toGraph(res);
 	   }
-	   
+	   */
 	   /*
 	   for(int i = 0;i < res.length;i++){
 		   for(int j = 0;j < res[0].length;j++){
@@ -403,17 +473,17 @@ class Test
 	   }
 	   */
 	   
-	   
+	   /*
 	   g2.writeFile("test_graph_cut");
 	   SeamCarving.writepgm(res,"test_cut.pgm");
 	   
 	   //bfs(g,0);
+	   
 	   g.writeFile("test_graph");
 	   SeamCarving.writepgm(tab, "test.pgm");
 	   
 	   System.out.println("termine ");
-		
-		
+	   */
 	 }
 
 }
