@@ -156,9 +156,46 @@ public class SeamCarving
             //return null;
         }
         
+   }
    
-  
-}
+   public static RGB[][] readppm(String fn)
+	 {		
+      try {
+          InputStream f = ClassLoader.getSystemClassLoader().getResourceAsStream(fn);
+          System.out.println(f);
+          BufferedReader d = new BufferedReader(new InputStreamReader(f));
+          String magic = d.readLine();
+          String line = d.readLine();
+		   while (line.startsWith("#")) {
+			  line = d.readLine();
+		   }
+		   Scanner s = new Scanner(line);
+		   int width = s.nextInt();
+		   int height = s.nextInt();		   
+		   line = d.readLine();
+		   s = new Scanner(line);
+		   int maxVal = s.nextInt();
+		   RGB[][] im = new RGB[height][width];
+		   s = new Scanner(d);
+		   int count = 0;
+		   System.out.println(8/2);
+		   while (count < height*width) {
+			  //im[count / width*3][count % width*3].setR(s.nextInt());
+			  //im[count / width*3][count % width*3].setG(s.nextInt());
+			  //im[count / width*3][count % width*3].setB(s.nextInt());
+			  //System.out.println(count);
+			  im[count / width]
+					  [count % width] = new RGB(s.nextInt(),s.nextInt(),s.nextInt());
+			  count++;
+		   }
+		   return im;
+      }
+		
+      catch(Throwable t) {
+          t.printStackTrace(System.err) ;
+          return null;
+      }
+  }
    
    public static int[][] interest (int[][] image){
 	   
@@ -193,6 +230,78 @@ public class SeamCarving
 	   return tab;
    }
    
+   public static int[][] interestPPM (RGB[][] image){
+	   
+	   int width = image[0].length;
+	   int height = image.length;
+	   int[][] tabR = new int[height][width];
+	   int[][] tabG = new int[height][width];
+	   int[][] tabB = new int[height][width];
+	   int intermediaireR = 0;
+	   int intermediaireG = 0;
+	   int intermediaireB = 0;
+	   for (int i = 0; i < height; ++i)
+	   {
+		  if(image[i][1].getR() > image[i][0].getR()){
+			  tabR[i][0] = image[i][1].getR() - image[i][0].getR();
+		  }else{
+			  tabR[i][0] = image[i][0].getR() - image[i][1].getR();
+		  }
+		  if(image[i][1].getG() > image[i][0].getG()){
+			  tabR[i][0] = image[i][1].getG() - image[i][0].getG();
+		  }else{
+			  tabR[i][0] = image[i][0].getG() - image[i][1].getG();
+		  }
+		  if(image[i][1].getB() > image[i][0].getB()){
+			  tabR[i][0] = image[i][1].getB() - image[i][0].getB();
+		  }else{
+			  tabR[i][0] = image[i][0].getB() - image[i][1].getB();
+		  }
+ 	      for (int j = 1; j < width-1; ++j)
+ 	      {
+ 	    	  intermediaireR = (image[i][j-1].getR() + image[i][j+1].getR()) /2;
+ 	    	  intermediaireG = (image[i][j-1].getG() + image[i][j+1].getG()) /2;
+ 	    	  intermediaireB = (image[i][j-1].getB() + image[i][j+1].getB()) /2;
+ 	    	  //System.out.println("intermediraire : "+intermediaire+" "+i+" "+j);
+ 	    	  if(intermediaireR > image[i][j].getR()){
+ 	    		  tabR[i][j] = intermediaireR - image[i][j].getR();
+ 	    	  }else{
+ 	    		 tabR[i][j] = image[i][j].getR() - intermediaireR;
+ 	    	  }
+ 	    	  if(intermediaireG > image[i][j].getG()){
+ 	    		  tabR[i][j] = intermediaireG - image[i][j].getG();
+ 	    	  }else{
+ 	    		 tabR[i][j] = image[i][j].getG() - intermediaireG;
+ 	    	  }
+ 	    	  if(intermediaireB > image[i][j].getB()){
+ 	    		  tabR[i][j] = intermediaireB - image[i][j].getB();
+ 	    	  }else{
+ 	    		 tabR[i][j] = image[i][j].getB() - intermediaireB;
+ 	    	  }
+ 	      }
+ 	      if(image[i][width-2].getR() > image[i][width-1].getR()){
+			  tabR[i][width-1] = image[i][width-2].getR() - image[i][width-1].getR();
+		  }else{
+			  tabR[i][width-1] = image[i][width-1].getR() - image[i][width-2].getR();
+		  }
+ 	      if(image[i][width-2].getG() > image[i][width-1].getG()){
+			  tabG[i][width-1] = image[i][width-2].getG() - image[i][width-1].getG();
+		  }else{
+			  tabG[i][width-1] = image[i][width-1].getG() - image[i][width-2].getG();
+		  }
+ 	      if(image[i][width-2].getB() > image[i][width-1].getB()){
+			  tabB[i][width-1] = image[i][width-2].getB() - image[i][width-1].getB();
+		  }else{
+			  tabB[i][width-1] = image[i][width-1].getB() - image[i][width-2].getB();
+		  }
+ 	   }
+	   int[][] resultat = new int[height][width];
+	   for (int i = 0; i < height; ++i)
+		   for (int j = 1; j < width-1; ++j)
+			   resultat[i][j] = tabR[i][j] + tabG[i][j] + tabB[i][j];
+	   return tabR;
+   }
+   
    // Useless ...
    public static String toString(int[][] image){
 	   StringBuilder sb = new StringBuilder();
@@ -215,6 +324,9 @@ public class SeamCarving
 	          	  	  {new RGB(0,255,0),new RGB(0,255,255)},
 	          	  	  {new RGB(0,0,255),new RGB(255,0,255)}};
 	   
-	   writeppm(tab,"test_couleur");
+	   RGB[][] image = readppm("len_top.ppm");
+	   int[][] interest = interestPPM(image);
+	   writepgm(interest,"interet_len.pgm");
+	   writeppm(image,"len_test.ppm");
    }
 }
