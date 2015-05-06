@@ -312,10 +312,98 @@ class Test
 	   System.out.println("to delete : "+toDelete.size());
 	   System.out.println("parcours : "+parcours.size());
 	   //System.out.println("width ? : "+resultat[0].length);
+	   System.out.println(resultat[0][(resultat[0].length-1)]);
 	   //System.out.println("height ? : "+resultat.length);
 	   //System.out.println("tableau : "+tab);
 	   return resultat;
-   }	 
+   }
+   
+   public static RGB[][] cutPPM(Graph g, RGB[][] tab){
+	   ArrayList<Integer> parcours = bfs(g,0);
+	   ArrayList<Integer> toDelete = new ArrayList<Integer>();
+	   for(int a : parcours){
+		   for(Edge e : g.adj(a)){
+			   if(e.from == a && e.used == e.capacity/* && e.capacity > 0 */&& !toDelete.contains(a)){
+				   for(int i = 1;i < tab[0].length;i++){
+					   if(toDelete.contains(a - tab.length*i)){
+						   //System.out.println("yolo");
+						   toDelete.remove(toDelete.indexOf(a - tab.length*i));
+					   }
+				   }
+				   toDelete.add(a);
+			   }
+		   }
+	   }
+	   /*
+	   for(Integer a : toDelete){
+		   System.out.println("a suppr : "+a);
+	   }
+	   */
+	   RGB[][] resultat = new RGB[tab.length][tab[0].length-1];
+	   //System.out.println("parcours : "+parcours);
+	   //System.out.println("to delete : "+toDelete);
+	   /*
+	   for(int i = 0;i < tab.length;i++){
+		   for(int j = 0;j < tab[0].length;j++){
+			   System.out.println("val : "+tab[i][j]+", i : "+i+", j : "+j);
+			   System.out.println("test : "+(j*tab.length+1+i));
+		   }
+	   }
+	   */
+	   //System.out.println("tableau : "+tab);
+	   /*
+	   for(int i = tab.length;i > 0;i--){
+		   System.out.println(parcours.get(parcours.size()-i));
+		   toDelete.add(parcours.get(parcours.size()-i));
+		   parcours.remove(parcours.size()-i);
+	   }
+	   */
+	   int a,b;
+	   boolean yep = false;
+	   //a = toDelete.get(2)/tab.length;
+	   //b = toDelete.get(2)/tab.length-1;
+	   //System.out.println("parcours : "+parcours);
+	   System.out.println(resultat[0].length);
+	   for(int i = 0;i < resultat.length;i++){
+		   yep = false;
+		   for(int j = 0;j < resultat[0].length;j++){
+			   //System.out.println("val : "+tab[i][j]+", i : "+i+", j : "+j);
+			   //if(j != resultat[0].length)
+			   
+			   if(!toDelete.contains((j)*tab.length+1+i)){
+				   //System.out.println("ready ? "+tab[i][j]);
+				   //System.out.println("yep : "+yep);
+				   if(yep){
+					   
+					   resultat[i][j-1] = tab[i][j];
+					   //if(j==398)
+					   //System.out.println("test "+j+" "+i);
+					   //System.out.println("i : "+i+"j : "+j+" :"+resultat[i][j-1].getR());
+				   }else{
+					   
+					   resultat[i][j]= tab[i][j];
+					   //System.out.println("i : "+i+"j : "+j+" :"+resultat[i][j].getR());
+				   }
+			   }else{
+				   yep = true;
+			   }
+			   //if(toDelete.contains(tab[i][j]))
+				//   System.out.println("on y est presque "+tab[i][j]);
+		   }
+	   }
+	   
+	   for(int i = 0; i < resultat.length;i++){
+		   System.out.println("serious ?"+(resultat[0].length-1));
+		   resultat[i][(resultat[0].length-1)]= tab[i][(resultat[0].length)];
+	   }
+	   System.out.println("to delete : "+toDelete.size());
+	   System.out.println("parcours : "+parcours.size());
+	   //System.out.println("width ? : "+resultat[0].length);
+	   //System.out.println("height ? : "+resultat.length);
+	   //System.out.println("tableau : "+tab);
+	   //System.out.println(resultat[0][398].getR());
+	   return resultat;
+   }
    
    public static int[][] rotateLeft(int[][] tab){
 	   int width = tab[0].length;
@@ -399,7 +487,42 @@ class Test
 				  	  {8,21,29,39,68}
 				  	  };
 	   
-	   Test.cutLine();
+	   // TEST COULEUR
+	   RGB[][] image = SeamCarving.readppm("len_top.ppm");
+	   //int[][] interest = SeamCarving.interestPPM(image);
+	   //writepgm(interest,"interet_len.pgm");
+	   SeamCarving.writeppm(image,"len_test.ppm");
+	   
+	   Graph g = new Graph(image.length*image[0].length+2);
+	   g = g.toGraph(SeamCarving.interestPPM(image));
+	   visite = new boolean[image.length*image[0].length+2];
+	   
+	   //bfs(g,0);
+	   flotMax(g);
+	   
+	   //g.writeFile("test2_ex1");
+	   
+	   RGB[][] res = cutPPM(g,image);
+	   System.out.println(res[0][398].getR());
+	   Graph g2 = new Graph(res.length*res[0].length+2);
+	   g2 = g2.toGraph(SeamCarving.interestPPM(res));
+	   
+	   
+	   
+	   for(int i = 0;i < 19;i++){
+		   System.out.println("ITERATION "+i);
+		   Graph g3 = new Graph(res.length*res[0].length+2);
+		   g3 = g3.toGraph(SeamCarving.interestPPM(res));
+		   visite = new boolean[res.length*res[0].length+2];
+		   flotMax(g3);
+		   res = cutPPM(g3,res);
+		   g3 = new Graph(res.length*res[0].length+2);
+		   g3 = g3.toGraph(SeamCarving.interestPPM(res));
+	   }
+	   
+	   SeamCarving.writeppm(res,"len_test_cut.ppm");
+	   
+	   //Test.cutLine();
 /*
 	   visite = new boolean[tab.length*tab[0].length+2];
 	   Graph g = new Graph(tab.length*tab[0].length+2);
@@ -418,7 +541,7 @@ class Test
 	   System.out.println("apres : "+tab2[0][1]);
 	   */
 	   
-	   
+	  
 	   /*
 	   // Aurait du fonctionner
 	   if(args[0] == null){
@@ -451,10 +574,10 @@ class Test
 	   int[][] res = cut(g,tab);
 	   Graph g2 = new Graph(res.length*res[0].length+2);
 	   g2 = g2.toGraph(res);
-	   */
 	   
-	   /*
-	   for(int i = 0;i < 14;i++){
+	   
+	   
+	   for(int i = 0;i < 4;i++){
 		   System.out.println("ITERATION "+i);
 		   Graph g3 = new Graph(res.length*res[0].length+2);
 		   g3 = g3.toGraph(SeamCarving.interest(res));
@@ -464,7 +587,7 @@ class Test
 		   g3 = new Graph(res.length*res[0].length+2);
 		   g3 = g3.toGraph(res);
 	   }
-	   */
+	   
 	   /*
 	   for(int i = 0;i < res.length;i++){
 		   for(int j = 0;j < res[0].length;j++){

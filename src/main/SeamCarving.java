@@ -234,6 +234,9 @@ public class SeamCarving
 	   
 	   int width = image[0].length;
 	   int height = image.length;
+	   System.out.println("width : "+width);
+	   System.out.println("height : "+height);
+	   System.out.println(image[0][width-1]);
 	   int[][] tabR = new int[height][width];
 	   int[][] tabG = new int[height][width];
 	   int[][] tabB = new int[height][width];
@@ -259,7 +262,11 @@ public class SeamCarving
 		  }
  	      for (int j = 1; j < width-1; ++j)
  	      {
- 	    	  intermediaireR = (image[i][j-1].getR() + image[i][j+1].getR()) /2;
+ 	    	  //System.out.println(j);
+ 	    	  //System.out.println(image[i][j+1].getR());
+ 	    	  intermediaireR = 
+ 	    			  (image[i][j-1].getR() 
+ 	    					  + image[i][j+1].getR()) /2;
  	    	  intermediaireG = (image[i][j-1].getG() + image[i][j+1].getG()) /2;
  	    	  intermediaireB = (image[i][j-1].getB() + image[i][j+1].getB()) /2;
  	    	  //System.out.println("intermediraire : "+intermediaire+" "+i+" "+j);
@@ -299,7 +306,7 @@ public class SeamCarving
 	   for (int i = 0; i < height; ++i)
 		   for (int j = 1; j < width-1; ++j)
 			   resultat[i][j] = tabR[i][j] + tabG[i][j] + tabB[i][j];
-	   return tabR;
+	   return resultat;
    }
    
    // Useless ...
