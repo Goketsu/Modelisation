@@ -309,6 +309,62 @@ public class SeamCarving
 	   return resultat;
    }
    
+   public static int[][] pixelsToDelete(int[][] tab,int x,int y,int width,int height){
+	   
+	   int tabWidth = tab[0].length;
+	   int tabHeight = tab.length;
+	   
+	   int cpt1 = 0;
+	   int cpt2 = 0;
+
+	   for(int i = 0;i < tabHeight; i++){
+		   for(int j = 0; j < tabWidth; j++){
+			   if(i == 50 && j == 100){
+				   System.out.println(i <= x+height);
+				   System.out.println(j <= y+width);
+				   System.out.println("x "+x);
+				   System.out.println("j "+j);
+				   System.out.println(j >= x);
+				   System.out.println(i >= y);
+			   }
+			   tab[i][j] = tab[i][j]+10;
+			   if(j >= x && i >= y && i < y+height && j < x+width){
+				   tab[i][j] = 0;
+				   cpt1++;
+				   //System.out.println("fdp "+tab[i][j]);
+			   }
+			   /*else{
+				   tab[i][j] = tab[i][j]+10;
+				   cpt2++;
+			   }*/
+		   }
+	   }
+	   
+	   System.out.println("nombre de 0 "+cpt1);
+	   System.out.println("nombre de +1 "+cpt2);
+	   System.out.println("ntm "+tab[0][0]);
+	   return tab;
+   }
+   
+   public static int[][] pixelsToKeep(int[][] tab,int x,int y,int width,int height){
+	   
+	   int tabWidth = tab[0].length;
+	   int tabHeight = tab.length;
+
+	   for(int j = 0; j < tabWidth; j++){
+		   for(int i = 0;i < tabHeight; i++){
+			   if(i > x && j > y && i < x+height && j < y+width){
+				   tab[i][j] = Integer.MAX_VALUE;
+			   }
+			   /*else{
+				   tab[i][j] = tab[i][j];
+			   }*/
+		   }
+	   }
+	   
+	   return tab;
+   }
+   
    // Useless ...
    public static String toString(int[][] image){
 	   StringBuilder sb = new StringBuilder();

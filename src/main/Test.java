@@ -393,7 +393,7 @@ class Test
 	   }
 	   
 	   for(int i = 0; i < resultat.length;i++){
-		   System.out.println("serious ?"+(resultat[0].length-1));
+		   //System.out.println("serious ?"+(resultat[0].length-1));
 		   resultat[i][(resultat[0].length-1)]= tab[i][(resultat[0].length)];
 	   }
 	   System.out.println("to delete : "+toDelete.size());
@@ -487,6 +487,53 @@ class Test
 				  	  {8,21,29,39,68}
 				  	  };
 	   
+	   //TEST PIXEL A SUPPRIMER/GARDER
+	   RGB[][] image = SeamCarving.readppm("len_top.ppm");
+	   int[][] interest = SeamCarving.interestPPM(image);
+	   SeamCarving.writepgm(interest,"interet_len.pgm");
+	   interest = SeamCarving.pixelsToDelete(interest, 160, 20, 50, 100);
+	   System.out.println("test "+interest[0][0]);
+	   SeamCarving.writepgm(interest,"interetDel_len.pgm");
+	   //interest = SeamCarving.pixelsToKeep(interest, 10, 10, 20, 40);
+	   //SeamCarving.writepgm(interest,"interetKeep_len.pgm");
+	   
+	   //TEST COUPE PIXEL A SUPPRIMER
+	   Graph g = new Graph(image.length*image[0].length+2);
+	   g = g.toGraph(interest);
+	   for(int i = 0;i < interest.length; i++){
+		   for(int j = 0; j < interest[0].length; j++){
+			   if(interest[i][j] == 0)
+				   System.out.println("i et j "+i+ " "+j);
+		   }
+	   }
+	   g.writeFile("test_graph");
+	   visite = new boolean[image.length*image[0].length+2];
+	   
+	   flotMax(g);
+	   
+	   RGB[][] res = cutPPM(g,image);
+	   interest = SeamCarving.interestPPM(res);
+	   interest = SeamCarving.pixelsToDelete(interest, 160, 20, 50, 100);
+	   System.out.println(res[0][398].getR());
+	   Graph g2 = new Graph(res.length*res[0].length+2);
+	   g2 = g2.toGraph(interest);
+	   
+	   for(int i = 0;i < 19;i++){
+		   System.out.println("ITERATION "+i);
+		   Graph g3 = new Graph(res.length*res[0].length+2);
+		   g3 = g3.toGraph(interest);
+		   visite = new boolean[res.length*res[0].length+2];
+		   flotMax(g3);
+		   res = cutPPM(g3,res);
+		   interest = SeamCarving.interestPPM(res);
+		   interest = SeamCarving.pixelsToDelete(interest, 160, 20, 50, 100);
+		   g3 = new Graph(res.length*res[0].length+2);
+		   g3 = g3.toGraph(interest);
+	   }
+	   
+	   SeamCarving.writeppm(res,"len_test_cut.ppm");
+	   
+	   /*
 	   // TEST COULEUR
 	   RGB[][] image = SeamCarving.readppm("len_top.ppm");
 	   //int[][] interest = SeamCarving.interestPPM(image);
@@ -521,6 +568,8 @@ class Test
 	   }
 	   
 	   SeamCarving.writeppm(res,"len_test_cut.ppm");
+	   //FIN TEST COULEUR
+	   */
 	   
 	   //Test.cutLine();
 /*

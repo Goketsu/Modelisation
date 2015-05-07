@@ -29,7 +29,7 @@ public class Graph
 	//System.out.println("hauteur : "+height);
 	
 	//Graph g = new Graph(width*height+2);
-	int[][] inter = SeamCarving.interest(itr);
+	//int[][] inter = SeamCarving.interest(itr);
 	/*
 	for(i = 0 ; i < height; i++){
 		g.addEdge(new Edge(0,i+1,-1,0));
@@ -48,7 +48,7 @@ public class Graph
 				
 				
 				//System.out.println("arc : " + oriArc + " -> " + destArc);
-				this.addEdge(new Edge(oriArc, destArc, inter[j][i],0));nb++;
+				this.addEdge(new Edge(oriArc, destArc, itr[j][i],0));nb++;
 			//g.addEdge(new Edge(width*i+j+1-i, height*(i+1)+j+1, inter[j][i],0));
 			
 			if(j>0){
@@ -78,7 +78,7 @@ public class Graph
 	
 	for(i = 0 ; i < height; i++){
 		//System.out.println("arc : " + ((height*width -height +1 +i)) + " -> " +(width*height+1));
-		this.addEdge(new Edge((height*width -height +1 +i),width*height+1,inter[i][width-1],0));
+		this.addEdge(new Edge((height*width -height +1 +i),width*height+1,itr[i][width-1],0));
 	}
 	
 	return this;
