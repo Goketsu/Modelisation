@@ -351,9 +351,9 @@ public class SeamCarving
 	   int tabWidth = tab[0].length;
 	   int tabHeight = tab.length;
 
-	   for(int j = 0; j < tabWidth; j++){
-		   for(int i = 0;i < tabHeight; i++){
-			   if(i > x && j > y && i < x+height && j < y+width){
+	   for(int i = 0;i < tabHeight; i++){
+		   for(int j = 0; j < tabWidth; j++){
+			   if(j >= x && i >= y && i < y+height && j < x+width){
 				   tab[i][j] = Integer.MAX_VALUE;
 			   }
 			   /*else{

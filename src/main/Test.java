@@ -442,6 +442,97 @@ class Test
 	   return tab2;
    }
    
+   public static void cutColumnPPM(String fichier, int nb){
+	   
+	   RGB[][] image = SeamCarving.readppm(fichier);
+	   SeamCarving.writeppm(image,"Test_"+fichier);
+	   
+	   Graph g = new Graph(image.length*image[0].length+2);
+	   
+	   RGB[][] res = image;
+	   
+	   Graph g2 = new Graph(res.length*res[0].length+2);	   
+	   
+	   for(int i = 0;i < nb;i++){
+		   System.out.println("ITERATION "+i);
+		   g = new Graph(res.length*res[0].length+2);
+		   g = g.toGraph(SeamCarving.interestPPM(res));
+		   visite = new boolean[res.length*res[0].length+2];
+		   flotMax(g);
+		   res = cutPPM(g,res);
+		   g2 = new Graph(res.length*res[0].length+2);
+		   g2 = g2.toGraph(SeamCarving.interestPPM(res));
+	   }
+	   
+	   SeamCarving.writeppm(res,"Test_cutCol_"+fichier);
+   }
+   
+   public static void pixDelCutColumnPPM(String fichier, int nb,int x, int y, int width, int height){
+	   
+	   RGB[][] image = SeamCarving.readppm(fichier);
+	   SeamCarving.writeppm(image,"Test_Del_"+fichier);
+
+
+	   int[][] interest = SeamCarving.interestPPM(image);
+	   interest = SeamCarving.pixelsToDelete(interest, x, y, width, height);
+	   //System.out.println("test "+interest[0][0]);
+	   SeamCarving.writepgm(interest,"Interest_"+fichier);
+	   
+	   Graph g = new Graph(image.length*image[0].length+2);
+	   
+	   RGB[][] res = image;
+	   
+	   Graph g2 = new Graph(res.length*res[0].length+2);	   
+	   
+	   for(int i = 0;i < nb;i++){
+		   System.out.println("ITERATION "+i);
+		   g = new Graph(res.length*res[0].length+2);
+		   g = g.toGraph(interest);
+		   visite = new boolean[res.length*res[0].length+2];
+		   flotMax(g);
+		   res = cutPPM(g,res);
+		   interest = SeamCarving.interestPPM(res);
+		   interest = SeamCarving.pixelsToDelete(interest, x, y, width, height);
+		   g2 = new Graph(res.length*res[0].length+2);
+		   g2 = g2.toGraph(SeamCarving.interestPPM(res));
+	   }
+	   
+	   SeamCarving.writeppm(res,"Test_Del_cutCol_"+fichier);
+   }
+   
+   public static void pixKeepCutColumnPPM(String fichier, int nb,int x, int y, int width, int height){
+	   
+	   RGB[][] image = SeamCarving.readppm(fichier);
+	   SeamCarving.writeppm(image,"Test_Keep_"+fichier);
+
+
+	   int[][] interest = SeamCarving.interestPPM(image);
+	   interest = SeamCarving.pixelsToKeep(interest, x, y, width, height);
+	   //System.out.println("test "+interest[0][0]);
+	   SeamCarving.writepgm(interest,"Interest_"+fichier);
+	   
+	   Graph g = new Graph(image.length*image[0].length+2);
+	   
+	   RGB[][] res = image;
+	   
+	   Graph g2 = new Graph(res.length*res[0].length+2);	   
+	   
+	   for(int i = 0;i < nb;i++){
+		   System.out.println("ITERATION "+i);
+		   g = new Graph(res.length*res[0].length+2);
+		   g = g.toGraph(interest);
+		   visite = new boolean[res.length*res[0].length+2];
+		   flotMax(g);
+		   res = cutPPM(g,res);
+		   interest = SeamCarving.interestPPM(res);
+		   interest = SeamCarving.pixelsToKeep(interest, x, y, width, height);
+		   g2 = new Graph(res.length*res[0].length+2);
+		   g2 = g2.toGraph(SeamCarving.interestPPM(res));
+	   }
+	   
+	   SeamCarving.writeppm(res,"Test_Keep_cutCol_"+fichier);
+   }
+   
    public static void cutLine(){
 
 	   int[][] tab = SeamCarving.readpgm("ex1.pgm");
@@ -487,25 +578,38 @@ class Test
 				  	  {8,21,29,39,68}
 				  	  };
 	   
+	   //Test de fonction cutColumn
+	   cutColumnPPM("len_top.ppm",20);
+	   
+	   //Test de pixels à delete
+	   pixDelCutColumnPPM("len_top.ppm",20,160,20,50,100);
+	   
+	   //Test de pixels à garder
+	   pixKeepCutColumnPPM("len_top.ppm",20,0,0,200,225);
+	   
+	   /*
 	   //TEST PIXEL A SUPPRIMER/GARDER
 	   RGB[][] image = SeamCarving.readppm("len_top.ppm");
 	   int[][] interest = SeamCarving.interestPPM(image);
 	   SeamCarving.writepgm(interest,"interet_len.pgm");
-	   interest = SeamCarving.pixelsToDelete(interest, 160, 20, 50, 100);
-	   System.out.println("test "+interest[0][0]);
-	   SeamCarving.writepgm(interest,"interetDel_len.pgm");
-	   //interest = SeamCarving.pixelsToKeep(interest, 10, 10, 20, 40);
-	   //SeamCarving.writepgm(interest,"interetKeep_len.pgm");
+	   //interest = SeamCarving.pixelsToDelete(interest, 160, 20, 50, 100);
+	   //System.out.println("test "+interest[0][0]);
+	   //SeamCarving.writepgm(interest,"interetDel_len.pgm");
+	   interest = SeamCarving.pixelsToKeep(interest, 0, 0, 200, 225);
+	   SeamCarving.writepgm(interest,"interetKeep_len.pgm");
 	   
 	   //TEST COUPE PIXEL A SUPPRIMER
 	   Graph g = new Graph(image.length*image[0].length+2);
 	   g = g.toGraph(interest);
+	   /*
 	   for(int i = 0;i < interest.length; i++){
 		   for(int j = 0; j < interest[0].length; j++){
 			   if(interest[i][j] == 0)
 				   System.out.println("i et j "+i+ " "+j);
 		   }
-	   }
+	   }*/
+	   
+	   /*
 	   g.writeFile("test_graph");
 	   visite = new boolean[image.length*image[0].length+2];
 	   
@@ -513,7 +617,7 @@ class Test
 	   
 	   RGB[][] res = cutPPM(g,image);
 	   interest = SeamCarving.interestPPM(res);
-	   interest = SeamCarving.pixelsToDelete(interest, 160, 20, 50, 100);
+	   interest = SeamCarving.pixelsToKeep(interest, 0, 0, 200, 225);
 	   System.out.println(res[0][398].getR());
 	   Graph g2 = new Graph(res.length*res[0].length+2);
 	   g2 = g2.toGraph(interest);
@@ -526,7 +630,7 @@ class Test
 		   flotMax(g3);
 		   res = cutPPM(g3,res);
 		   interest = SeamCarving.interestPPM(res);
-		   interest = SeamCarving.pixelsToDelete(interest, 160, 20, 50, 100);
+		   interest = SeamCarving.pixelsToKeep(interest, 0, 0, 200, 225);
 		   g3 = new Graph(res.length*res[0].length+2);
 		   g3 = g3.toGraph(interest);
 	   }
