@@ -141,7 +141,36 @@ public class EnergieAvant {
 		}
 		
 		return g;
+	}
+	
+	public static void cutColumnPGM(String fichier, int nb){
+		int[][] image = SeamCarving.readpgm("ex1.pgm");
+		
+		int[][] itrR = interestRight(image);
+		int[][] itrD = interestDown(image);
+		int[][] itrU = interestUp(image);
+		Graph g = EnergieAvant.toGraph(itrR,itrD,itrU);
+		int[][] res = image;
+		Graph g2 = new Graph(res.length*res[0].length+2);
+		
+		for(int i = 0;i < nb;i++){
+			System.out.println("ITERATION "+(i+1));
+			g = new Graph(res.length*res[0].length+2);
+			itrR = interestRight(res);
+			itrD = interestDown(res);
+			itrU = interestUp(res);
+			g = EnergieAvant.toGraph(itrR,itrD,itrU);
+			//g3 = g3.toGraph(SeamCarving.interest(res));
+			Test.visite = new boolean[res.length*res[0].length+2];
+			Test.flotMax(g);
+			res = Test.cut(g,res);
+			g2 = new Graph(res.length*res[0].length+2);
+			g2 = g2.toGraph(res);
 		}
+		
+		SeamCarving.writepgm(res,"test_cut.pgm");
+		//return image;
+	}
 	
 	public static void main(String[] args){
 		int[][] tab =  {{3,11,24,39},
@@ -150,10 +179,12 @@ public class EnergieAvant {
 						};
 		
 		Scanner sc = new Scanner(System.in);
-	    System.out.println("Saisissez un entier : ");
+	    System.out.println("Combien de colonne voulez-vous supprimer ?");
 	    int nb = sc.nextInt();
-	    System.out.println("vous avez entré : "+nb);
+	    System.out.println("suppression de "+nb+" colonnes");
+	    cutColumnPGM("ex1.pgm", nb);
 		
+	    /*
 		int[][] image = SeamCarving.readpgm("ex1.pgm");
 		
 		int[][] itrR = interestRight(image);
