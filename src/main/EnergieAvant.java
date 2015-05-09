@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Scanner;
+
 public class EnergieAvant {
 	
 	public static int[][] interestRight(int[][] image){
@@ -146,18 +148,62 @@ public class EnergieAvant {
 			  	  		{8,21,29,39},
 			  	  		{74,80,100,200},
 						};
-		int[][] itrR = interestRight(tab);
-		int[][] itrD = interestDown(tab);
-		int[][] itrU = interestUp(tab);
+		
+		Scanner sc = new Scanner(System.in);
+	    System.out.println("Saisissez un entier : ");
+	    int nb = sc.nextInt();
+	    System.out.println("vous avez entré : "+nb);
+		
+		int[][] image = SeamCarving.readpgm("ex1.pgm");
+		
+		int[][] itrR = interestRight(image);
+		int[][] itrD = interestDown(image);
+		int[][] itrU = interestUp(image);
 		Graph g = EnergieAvant.toGraph(itrR,itrD,itrU);
 		g.writeFile("energie_graph");
 		
+		Test.visite = new boolean[image.length*image[0].length+2];
+		Test.flotMax(g);
+		   
+		   //g.writeFile("test2_ex1");
+		   
+		int[][] res = Test.cut(g,image);
+		Graph g2 = new Graph(res.length*res[0].length+2);
+		g2 = g2.toGraph(res);
+		   
+		   
+		   
+		for(int i = 0;i < nb;i++){
+			System.out.println("ITERATION "+i+1);
+			Graph g3 = new Graph(res.length*res[0].length+2);
+			itrR = interestRight(res);
+			itrD = interestDown(res);
+			itrU = interestUp(res);
+			g3 = EnergieAvant.toGraph(itrR,itrD,itrU);
+			//g3 = g3.toGraph(SeamCarving.interest(res));
+			Test.visite = new boolean[res.length*res[0].length+2];
+			Test.flotMax(g3);
+			res = Test.cut(g3,res);
+			g3 = new Graph(res.length*res[0].length+2);
+			g3 = g3.toGraph(res);
+		}
 		
+		SeamCarving.writepgm(res,"test_cut.pgm");
+		   
+		   
+		   
+		//g.writeFile("test_graph");
+		SeamCarving.writepgm(image, "test.pgm");
+		   
+		System.out.println("termine ");
+		
+		/*
 		for(int i = 0;i < itrR.length; i++){
 			for(int j = 0; j < itrR[0].length; j++){
 				System.out.println(itrR[i][j]);
 			}
 		}
+		*/
 	}
 
 }
