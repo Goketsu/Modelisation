@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 class Test
 {
@@ -442,6 +443,33 @@ class Test
 	   return tab2;
    }
    
+   public static void cutColumnPGM(String fichier, int nb){
+	   
+	   int[][] tab = SeamCarving.readpgm(fichier);
+	   Graph g = new Graph(tab.length*tab[0].length+2);
+	   g.writeFile("test_graph");
+	   SeamCarving.writepgm(tab, "test_"+fichier);
+	   int[][] res = tab;
+	   Graph g2 = new Graph(res.length*res[0].length+2);
+	   for(int i = 0;i < 10; i++){
+		   System.out.println("ITERATION "+i);
+		   g = new Graph(res.length*res[0].length+2);
+		   g = g.toGraph(SeamCarving.interest(res));
+		   visite = new boolean[res.length*res[0].length+2];
+	   
+		   flotMax(g);
+	   
+		   res = cut(g,res);
+		   g2 = new Graph(res.length*res[0].length+2);
+		   g2 = g2.toGraph(res);
+	   }
+	   
+	   //g2.writeFile("test_graph_cutLine");
+	   SeamCarving.writepgm(res,"test_cutCol_"+fichier);
+	   
+	   System.out.println("termine ");
+   }
+   
    public static void cutColumnPPM(String fichier, int nb){
 	   
 	   RGB[][] image = SeamCarving.readppm(fichier);
@@ -577,7 +605,7 @@ class Test
 				  	  {74,80,100,200,9},
 				  	  {8,21,29,39,68}
 				  	  };
-	   
+	   /*
 	   //Test de fonction cutColumn
 	   cutColumnPPM("len_top.ppm",20);
 	   
@@ -586,6 +614,67 @@ class Test
 	   
 	   //Test de pixels à garder
 	   pixKeepCutColumnPPM("len_top.ppm",20,0,0,200,225);
+	   */
+	   
+	   //cutColumnPGM("ex1.pgm",10);
+	   
+	   // INTERFACE UTILISATEUR
+	   Scanner sc = new Scanner(System.in);
+	   int algo = 0;
+	   System.out.println("Quel algorithme voulez-vous utilisez ?");
+	   System.out.println("1 : Algorithme normal");
+	   System.out.println("2 : Algorithme d'energie avant");
+	   int nb = sc.nextInt();
+	   if(nb < 1 || nb > 2){
+		   System.out.println("L'option choisie n'est pas valide");
+	   }else{
+		   if(nb == 1){
+			   System.out.println("Vous avez choisi : Algorithme normal");
+			   algo = 1;
+		   }else{
+			   System.out.println("Vous avez choisi : Algorithme d'energie avant");
+			   algo = 2;
+		   }
+	   }
+	   System.out.println("Quelle image voulez-vous modifier ?");
+	   String fichier = "ex1.pgm";
+	   System.out.println("1 : ex1.pgm");
+	   System.out.println("2 : ex2.pgm");
+	   System.out.println("3 : ex3.pgm");
+	   System.out.println("4 : len_top.ppm (couleur)");
+	   int im = sc.nextInt();
+	   if(im < 1 || nb > 4){
+		   System.out.println("L'option choisie n'est pas valide");
+	   }else{
+		   if(im == 1){
+			   System.out.println("Vous avez choisi : ex1.pgm");
+			   fichier = "ex1.pgm";
+		   }if(im == 2){
+			   System.out.println("Vous avez choisi : ex2.pgm");
+			   fichier = "ex2.pgm";
+		   }if(im == 3){
+			   System.out.println("Vous avez choisi : ex3.pgm");
+			   fichier = "ex3.pgm";
+		   }if(im == 4){
+			   System.out.println("Vous avez choisi : len_top.ppm");
+			   fichier = "len_top.ppm";
+		   }
+	   }
+	   System.out.println("Combien de colonne voulez-vous suprrimer ?");
+	   int col = sc.nextInt();
+	   System.out.println("Vous voulez supprimez "+col+" colonnes");
+	   if(algo == 1){
+		   if(fichier == "ex1.pgm" || fichier == "ex2.pgm" || fichier == "ex3.pgm")
+			   cutColumnPGM(fichier,col);
+		   else
+			   cutColumnPPM(fichier,col);
+	   }else{
+		   if(fichier == "ex1.pgm" || fichier == "ex2.pgm" || fichier == "ex3.pgm")
+			   EnergieAvant.cutColumnPGM(fichier, col);
+		   else
+			   EnergieAvant.cutColumnPPM(fichier, col);
+	   }
+	   //EnergieAvant.cutColumnPGM(fichier, col);
 	   
 	   /*
 	   //TEST PIXEL A SUPPRIMER/GARDER

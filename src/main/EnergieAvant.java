@@ -26,6 +26,47 @@ public class EnergieAvant {
 		return tab;
 	}
 	
+	public static int[][] interestRightPPM(RGB[][] image){
+		
+		int width = image[0].length;
+		int height = image.length;
+		int[][] tabR = new int[height][width];
+		int[][] tabG = new int[height][width];
+		int[][] tabB = new int[height][width];
+		
+		for(int i = 0;i < height;i++){
+			tabR[i][0] = image[i][1].getR();
+			tabG[i][0] = image[i][1].getG();
+			tabB[i][0] = image[i][1].getB();
+			for(int j = 1; j < width-1; j++){
+				if(image[i][j-1].getR() > image[i][j+1].getR()){
+					tabR[i][j] = image[i][j-1].getR()-image[i][j+1].getR();
+				}else{
+					tabR[i][j] = image[i][j+1].getR()-image[i][j-1].getR();
+				}
+				if(image[i][j-1].getG() > image[i][j+1].getG()){
+					tabG[i][j] = image[i][j-1].getG()-image[i][j+1].getG();
+				}else{
+					tabG[i][j] = image[i][j+1].getG()-image[i][j-1].getG();
+				}
+				if(image[i][j-1].getB() > image[i][j+1].getB()){
+					tabB[i][j] = image[i][j-1].getB()-image[i][j+1].getB();
+				}else{
+					tabB[i][j] = image[i][j+1].getB()-image[i][j-1].getB();
+				}
+			}
+			tabR[i][width-1] = image[i][width-2].getR();
+			tabG[i][width-1] = image[i][width-2].getG();
+			tabB[i][width-1] = image[i][width-2].getB();
+		}
+		int[][] resultat = new int[height][width];
+		for (int i = 0; i < height; ++i)
+			for (int j = 1; j < width-1; ++j)
+				resultat[i][j] = tabR[i][j] + tabG[i][j] + tabB[i][j];
+		return resultat;
+		
+	}
+	
 	public static int[][] interestDown(int[][] image){
 		
 		int width = image[0].length;
@@ -47,6 +88,45 @@ public class EnergieAvant {
 		return tab;
 	}
 	
+	public static int[][] interestDownPPM(RGB[][] image){
+		
+		int width = image[0].length;
+		int height = image.length;
+		int[][] tabR = new int[height][width];
+		int[][] tabG = new int[height][width];
+		int[][] tabB = new int[height][width];
+		
+		
+		for(int i = 0;i < height-1;i++){
+			tabR[i][0] = image[i+1][0].getR();
+			tabG[i][0] = image[i+1][0].getG();
+			tabB[i][0] = image[i+1][0].getB();
+			for(int j = 1; j < width; j++){	
+				if(image[i+1][j].getR() > image[i][j-1].getR()){
+					tabR[i][j] = image[i+1][j].getR()-image[i][j-1].getR();
+				}else{
+					tabR[i][j] = image[i][j-1].getR()-image[i+1][j].getR();
+				}	
+				if(image[i+1][j].getG() > image[i][j-1].getG()){
+					tabG[i][j] = image[i+1][j].getG()-image[i][j-1].getG();
+				}else{
+					tabG[i][j] = image[i][j-1].getG()-image[i+1][j].getG();
+				}	
+				if(image[i+1][j].getB() > image[i][j-1].getB()){
+					tabB[i][j] = image[i+1][j].getB()-image[i][j-1].getB();
+				}else{
+					tabB[i][j] = image[i][j-1].getB()-image[i+1][j].getB();
+				}
+				
+			}
+		}
+		int[][] resultat = new int[height][width];
+		for (int i = 0; i < height; ++i)
+			for (int j = 1; j < width-1; ++j)
+				resultat[i][j] = tabR[i][j] + tabG[i][j] + tabB[i][j];
+		return resultat;
+	}
+	
 	public static int[][] interestUp(int[][] image){
 		
 		int width = image[0].length;
@@ -65,6 +145,44 @@ public class EnergieAvant {
 			}	
 		}
 		return tab;
+	}
+	
+	public static int[][] interestUpPPM(RGB[][] image){
+		
+		int width = image[0].length;
+		int height = image.length;
+		int[][] tabR = new int[height][width];
+		int[][] tabG = new int[height][width];
+		int[][] tabB = new int[height][width];
+		
+		
+		for(int i = 0;i < height-1;i++){
+			tabR[i][0] = image[i][0].getR();
+			tabG[i][0] = image[i][0].getG();
+			tabB[i][0] = image[i][0].getB();
+			for(int j = 1; j < width; j++){
+				if(image[i][j].getR() > image[i+1][j-1].getR()){
+					tabR[i][j] = image[i][j].getR()-image[i+1][j-1].getR();
+				}else{
+					tabR[i][j] = image[i+1][j-1].getR()-image[i][j].getR();
+				}
+				if(image[i][j].getG() > image[i+1][j-1].getG()){
+					tabG[i][j] = image[i][j].getG()-image[i+1][j-1].getG();
+				}else{
+					tabG[i][j] = image[i+1][j-1].getG()-image[i][j].getG();
+				}
+				if(image[i][j].getB() > image[i+1][j-1].getB()){
+					tabB[i][j] = image[i][j].getB()-image[i+1][j-1].getB();
+				}else{
+					tabB[i][j] = image[i+1][j-1].getB()-image[i][j].getB();
+				}
+			}	
+		}
+		int[][] resultat = new int[height][width];
+		for (int i = 0; i < height; ++i)
+			for (int j = 1; j < width-1; ++j)
+				resultat[i][j] = tabR[i][j] + tabG[i][j] + tabB[i][j];
+		return resultat;
 	}
 	
 	public static Graph toGraph(int[][] itrRight,int[][] itrDown,int[][] itrUp){
@@ -144,7 +262,7 @@ public class EnergieAvant {
 	}
 	
 	public static void cutColumnPGM(String fichier, int nb){
-		int[][] image = SeamCarving.readpgm("ex1.pgm");
+		int[][] image = SeamCarving.readpgm(fichier);
 		
 		int[][] itrR = interestRight(image);
 		int[][] itrD = interestDown(image);
@@ -172,6 +290,35 @@ public class EnergieAvant {
 		//return image;
 	}
 	
+	public static void cutColumnPPM(String fichier, int nb){
+		RGB[][] image = SeamCarving.readppm(fichier);
+		
+		int[][] itrR = interestRightPPM(image);
+		int[][] itrD = interestDownPPM(image);
+		int[][] itrU = interestUpPPM(image);
+		Graph g = EnergieAvant.toGraph(itrR,itrD,itrU);
+		RGB[][] res = image;
+		Graph g2 = new Graph(res.length*res[0].length+2);
+		
+		for(int i = 0;i < nb;i++){
+			System.out.println("ITERATION "+(i+1));
+			g = new Graph(res.length*res[0].length+2);
+			itrR = interestRightPPM(res);
+			itrD = interestDownPPM(res);
+			itrU = interestUpPPM(res);
+			g = EnergieAvant.toGraph(itrR,itrD,itrU);
+			//g3 = g3.toGraph(SeamCarving.interest(res));
+			Test.visite = new boolean[res.length*res[0].length+2];
+			Test.flotMax(g);
+			res = Test.cutPPM(g,res);
+			//g2 = new Graph(res.length*res[0].length+2);
+			//g2 = g2.toGraph(res);
+		}
+		
+		SeamCarving.writeppm(res,"test_cut.ppm");
+		//return image;
+	}
+	
 	public static void main(String[] args){
 		int[][] tab =  {{3,11,24,39},
 			  	  		{8,21,29,39},
@@ -182,7 +329,7 @@ public class EnergieAvant {
 	    System.out.println("Combien de colonne voulez-vous supprimer ?");
 	    int nb = sc.nextInt();
 	    System.out.println("suppression de "+nb+" colonnes");
-	    cutColumnPGM("ex1.pgm", nb);
+	    cutColumnPPM("len_top.ppm", nb);
 		
 	    /*
 		int[][] image = SeamCarving.readpgm("ex1.pgm");
