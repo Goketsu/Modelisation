@@ -263,7 +263,7 @@ public class EnergieAvant {
 	
 	public static void cutColumnPGM(String fichier, int nb){
 		int[][] image = SeamCarving.readpgm(fichier);
-		
+
 		int[][] itrR = interestRight(image);
 		int[][] itrD = interestDown(image);
 		int[][] itrU = interestUp(image);
@@ -286,7 +286,37 @@ public class EnergieAvant {
 			g2 = g2.toGraph(res);
 		}
 		
-		SeamCarving.writepgm(res,"test_cut.pgm");
+		SeamCarving.writepgm(res,"energie_cutCol_"+fichier);
+		//return image;
+	}
+	
+	public static void cutLinePGM(String fichier, int nb){
+		int[][] image = SeamCarving.readpgm(fichier);
+
+		image = Test.rotateLeftPGM(image);
+		int[][] itrR = interestRight(image);
+		int[][] itrD = interestDown(image);
+		int[][] itrU = interestUp(image);
+		Graph g = EnergieAvant.toGraph(itrR,itrD,itrU);
+		int[][] res = image;
+		Graph g2 = new Graph(res.length*res[0].length+2);
+		
+		for(int i = 0;i < nb;i++){
+			System.out.println("ITERATION "+(i+1));
+			g = new Graph(res.length*res[0].length+2);
+			itrR = interestRight(res);
+			itrD = interestDown(res);
+			itrU = interestUp(res);
+			g = EnergieAvant.toGraph(itrR,itrD,itrU);
+			//g3 = g3.toGraph(SeamCarving.interest(res));
+			Test.visite = new boolean[res.length*res[0].length+2];
+			Test.flotMax(g);
+			res = Test.cut(g,res);
+			g2 = new Graph(res.length*res[0].length+2);
+			g2 = g2.toGraph(res);
+		}
+		res = Test.rotateRightPGM(res);
+		SeamCarving.writepgm(res,"energie_cutLine_"+fichier);
 		//return image;
 	}
 	
@@ -314,8 +344,39 @@ public class EnergieAvant {
 			//g2 = new Graph(res.length*res[0].length+2);
 			//g2 = g2.toGraph(res);
 		}
+
+		SeamCarving.writeppm(res,"energie_cutCol_"+fichier);
+		//return image;
+	}
+	
+	public static void cutLinePPM(String fichier, int nb){
+		RGB[][] image = SeamCarving.readppm(fichier);
+		image = Test.rotateLeftPPM(image);
 		
-		SeamCarving.writeppm(res,"test_cut.ppm");
+		int[][] itrR = interestRightPPM(image);
+		int[][] itrD = interestDownPPM(image);
+		int[][] itrU = interestUpPPM(image);
+		Graph g = EnergieAvant.toGraph(itrR,itrD,itrU);
+		RGB[][] res = image;
+		Graph g2 = new Graph(res.length*res[0].length+2);
+		
+		for(int i = 0;i < nb;i++){
+			System.out.println("ITERATION "+(i+1));
+			g = new Graph(res.length*res[0].length+2);
+			itrR = interestRightPPM(res);
+			itrD = interestDownPPM(res);
+			itrU = interestUpPPM(res);
+			g = EnergieAvant.toGraph(itrR,itrD,itrU);
+			//g3 = g3.toGraph(SeamCarving.interest(res));
+			Test.visite = new boolean[res.length*res[0].length+2];
+			Test.flotMax(g);
+			res = Test.cutPPM(g,res);
+			//g2 = new Graph(res.length*res[0].length+2);
+			//g2 = g2.toGraph(res);
+		}
+
+		res = Test.rotateRightPPM(res);
+		SeamCarving.writeppm(res,"energie_cutLine_"+fichier);
 		//return image;
 	}
 	

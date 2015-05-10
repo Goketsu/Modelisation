@@ -406,7 +406,7 @@ class Test
 	   return resultat;
    }
    
-   public static int[][] rotateLeft(int[][] tab){
+   public static int[][] rotateLeftPGM(int[][] tab){
 	   int width = tab[0].length;
 	   int height = tab.length;
 	   System.out.println("largeur : "+width);
@@ -426,12 +426,49 @@ class Test
 	   return tab2;
    }
    
-   public static int[][] rotateRight(int[][] tab){
+   public static RGB[][] rotateLeftPPM(RGB[][] tab){
+	   int width = tab[0].length;
+	   int height = tab.length;
+	   System.out.println("largeur : "+width);
+	   System.out.println("hauteur : "+height);
+	   RGB[][] tab2 = new RGB[width][height];
+	   for (int i = 0; i < width; i++){
+			for (int j = 0; j < height ; j++){
+				//System.out.println("i : "+i+", j : "+j);
+				//System.out.println("tab 1 : "+tab[i][j]);
+				tab2[i][j] = 
+						tab[j][width-i-1];
+				//System.out.println("tab 2 : "+tab2[i][j]);
+			}
+	   }
+	   System.out.println("largeur 2 : "+tab2[0].length);
+	   System.out.println("hauteur 2 : "+tab2.length);
+	   return tab2;
+   }
+   
+   public static int[][] rotateRightPGM(int[][] tab){
 	   int width = tab[0].length;
 	   int height = tab.length;
 	   System.out.println("largeur : "+width);
 	   System.out.println("hauteur : "+height);
 	   int[][] tab2 = new int[width][height];
+	   for (int i = 0; i < width; i++){
+			for (int j = 0; j < height ; j++){
+				tab2[i][j] = tab[height-j-1][i];
+				//System.out.println("tab 2 : "+tab2[i][j]);
+			}
+	   }
+	   System.out.println("largeur 2 : "+tab2[0].length);
+	   System.out.println("hauteur 2 : "+tab2.length);
+	   return tab2;
+   }
+   
+   public static RGB[][] rotateRightPPM(RGB[][] tab){
+	   int width = tab[0].length;
+	   int height = tab.length;
+	   System.out.println("largeur : "+width);
+	   System.out.println("hauteur : "+height);
+	   RGB[][] tab2 = new RGB[width][height];
 	   for (int i = 0; i < width; i++){
 			for (int j = 0; j < height ; j++){
 				tab2[i][j] = tab[height-j-1][i];
@@ -451,7 +488,7 @@ class Test
 	   SeamCarving.writepgm(tab, "test_"+fichier);
 	   int[][] res = tab;
 	   Graph g2 = new Graph(res.length*res[0].length+2);
-	   for(int i = 0;i < 10; i++){
+	   for(int i = 0;i < nb; i++){
 		   System.out.println("ITERATION "+i);
 		   g = new Graph(res.length*res[0].length+2);
 		   g = g.toGraph(SeamCarving.interest(res));
@@ -561,16 +598,16 @@ class Test
 	   SeamCarving.writeppm(res,"Test_Keep_cutCol_"+fichier);
    }
    
-   public static void cutLine(){
+   public static void cutLinePGM(String fichier, int nb){
 
-	   int[][] tab = SeamCarving.readpgm("ex1.pgm");
+	   int[][] tab = SeamCarving.readpgm(fichier);
 	   Graph g = new Graph(tab.length*tab[0].length+2);
 	   g.writeFile("test_graph");
-	   SeamCarving.writepgm(tab, "test.pgm");
-	   tab = Test.rotateLeft(tab);
+	   SeamCarving.writepgm(tab, "Test.pgm");
+	   tab = Test.rotateLeftPGM(tab);
 	   int[][] res = tab;
 	   Graph g2 = new Graph(res.length*res[0].length+2);
-	   for(int i = 0;i < 10; i++){
+	   for(int i = 0;i < nb; i++){
 		   System.out.println("ITERATION "+i);
 		   g = new Graph(res.length*res[0].length+2);
 		   g = g.toGraph(SeamCarving.interest(res));
@@ -585,11 +622,46 @@ class Test
 		   g2 = new Graph(res.length*res[0].length+2);
 		   g2 = g2.toGraph(res);
 	   }
-	   res = Test.rotateRight(res);
+	   res = Test.rotateRightPGM(res);
 	   
 
 	   g2.writeFile("test_graph_cutLine");
-	   SeamCarving.writepgm(res,"test_cutLine.pgm");
+	   SeamCarving.writepgm(res,"Test_CutLine_"+fichier);
+	   
+	   //bfs(g,0);
+	   
+	   System.out.println("termine ");
+   }
+   
+   public static void cutLinePPM(String fichier, int nb){
+
+	   RGB[][] tab = SeamCarving.readppm(fichier);
+	   Graph g = new Graph(tab.length*tab[0].length+2);
+	   g.writeFile("test_graph");
+	   SeamCarving.writeppm(tab, "test.ppm");
+	   tab = Test.rotateLeftPPM(tab);
+	   RGB[][] res = tab;
+	   Graph g2 = new Graph(res.length*res[0].length+2);
+	   for(int i = 0;i < 10; i++){
+		   System.out.println("ITERATION "+i);
+		   g = new Graph(res.length*res[0].length+2);
+		   g = g.toGraph(SeamCarving.interestPPM(res));
+		   visite = new boolean[res.length*res[0].length+2];
+	   
+		   //bfs(g,0);
+		   flotMax(g);
+	   
+		   //g.writeFile("test2_ex1");
+	   
+		   res = cutPPM(g,res);
+		   g2 = new Graph(res.length*res[0].length+2);
+		   g2 = g2.toGraph(SeamCarving.interestPPM(res));
+	   }
+	   res = Test.rotateRightPPM(res);
+	   
+
+	   g2.writeFile("test_graph_cutLine");
+	   SeamCarving.writeppm(res,"test_cutLine_"+fichier);
 	   
 	   //bfs(g,0);
 	   
@@ -621,58 +693,98 @@ class Test
 	   // INTERFACE UTILISATEUR
 	   Scanner sc = new Scanner(System.in);
 	   int algo = 0;
-	   System.out.println("Quel algorithme voulez-vous utilisez ?");
-	   System.out.println("1 : Algorithme normal");
-	   System.out.println("2 : Algorithme d'energie avant");
-	   int nb = sc.nextInt();
-	   if(nb < 1 || nb > 2){
-		   System.out.println("L'option choisie n'est pas valide");
-	   }else{
-		   if(nb == 1){
-			   System.out.println("Vous avez choisi : Algorithme normal");
-			   algo = 1;
-		   }else{
-			   System.out.println("Vous avez choisi : Algorithme d'energie avant");
-			   algo = 2;
+	   int nb = 0;
+	   while(nb < 1 || nb > 2){
+		   System.out.println("Quel algorithme voulez-vous utilisez ?");
+		   System.out.println("1 : Algorithme normal");
+		   System.out.println("2 : Algorithme d'energie avant");
+		   nb = sc.nextInt();
+		   if(nb < 1 || nb > 2){
+			   System.out.println("L'option choisie n'est pas valide");
 		   }
 	   }
-	   System.out.println("Quelle image voulez-vous modifier ?");
+	   if(nb == 1){
+		   System.out.println("Vous avez choisi : Algorithme normal");
+		   algo = 1;
+	   }else{
+		   System.out.println("Vous avez choisi : Algorithme d'energie avant");
+		   algo = 2;
+		   
+	   }
+	   
+	   int im = 0;
 	   String fichier = "ex1.pgm";
-	   System.out.println("1 : ex1.pgm");
-	   System.out.println("2 : ex2.pgm");
-	   System.out.println("3 : ex3.pgm");
-	   System.out.println("4 : len_top.ppm (couleur)");
-	   int im = sc.nextInt();
-	   if(im < 1 || nb > 4){
-		   System.out.println("L'option choisie n'est pas valide");
-	   }else{
-		   if(im == 1){
-			   System.out.println("Vous avez choisi : ex1.pgm");
-			   fichier = "ex1.pgm";
-		   }if(im == 2){
-			   System.out.println("Vous avez choisi : ex2.pgm");
-			   fichier = "ex2.pgm";
-		   }if(im == 3){
-			   System.out.println("Vous avez choisi : ex3.pgm");
-			   fichier = "ex3.pgm";
-		   }if(im == 4){
-			   System.out.println("Vous avez choisi : len_top.ppm");
-			   fichier = "len_top.ppm";
+	   while(im < 1 || im > 4){
+		   System.out.println("Quelle image voulez-vous modifier ?");
+		   System.out.println("1 : ex1.pgm");
+		   System.out.println("2 : ex2.pgm");
+		   System.out.println("3 : ex3.pgm");
+		   System.out.println("4 : len_top.ppm (couleur)");
+		   im = sc.nextInt();
+		   if(im < 1 || im > 4){
+			   System.out.println("L'option choisie n'est pas valide");
 		   }
 	   }
-	   System.out.println("Combien de colonne voulez-vous suprrimer ?");
-	   int col = sc.nextInt();
+	   if(im == 1){
+		   System.out.println("Vous avez choisi : ex1.pgm");
+		   fichier = "ex1.pgm";
+	   }if(im == 2){
+		   System.out.println("Vous avez choisi : ex2.pgm");
+		   fichier = "ex2.pgm";
+	   }if(im == 3){
+		   System.out.println("Vous avez choisi : ex3.pgm");
+		   fichier = "ex3.pgm";
+	   }if(im == 4){
+		   System.out.println("Vous avez choisi : len_top.ppm");
+		   fichier = "len_top.ppm";
+	   }
+	   int type = 0;
+	   while(type < 1 || type > 2){
+		   System.out.println("Voulez-vous faire une coupe en ligne ou en colonne ?");
+		   System.out.println("1 : en colonne");
+		   System.out.println("2 : en ligne");
+		   type = sc.nextInt();
+		   if(type < 1 || type > 2)
+			   System.out.println("L'option choisie n'est pas valide");
+	   }
+	   if(type == 1)
+		   System.out.println("Vous avez choisi une coup en colonne");
+	   if(type == 2)
+		   System.out.println("Vous avez choisi une coupe en ligne");
+	   
+	   int col = 0;
+	   while(col < 1){
+		   if(type == 1)
+			   System.out.println("Combien de colonnes voulez-vous suprrimer ?");
+		   else
+			   System.out.println("Combien de lignes voulez-vous suprrimer ?");
+		   col = sc.nextInt();
+		   if(col < 1)
+			   System.out.println("Veuillez entrer un nombre superieur à 0");
+	   }
 	   System.out.println("Vous voulez supprimez "+col+" colonnes");
 	   if(algo == 1){
 		   if(fichier == "ex1.pgm" || fichier == "ex2.pgm" || fichier == "ex3.pgm")
-			   cutColumnPGM(fichier,col);
+			   if(type == 1)
+				   cutColumnPGM(fichier,col);
+			   else
+				   cutLinePGM(fichier,col);
 		   else
-			   cutColumnPPM(fichier,col);
+			   if(type == 1)
+				   cutColumnPPM(fichier,col);
+			   else
+				   cutLinePPM(fichier,col);
 	   }else{
 		   if(fichier == "ex1.pgm" || fichier == "ex2.pgm" || fichier == "ex3.pgm")
-			   EnergieAvant.cutColumnPGM(fichier, col);
+			   if(type == 1)
+				   EnergieAvant.cutColumnPGM(fichier, col);
+			   else
+				   EnergieAvant.cutLinePGM(fichier, col);
 		   else
-			   EnergieAvant.cutColumnPPM(fichier, col);
+			   if(type == 1)
+				   EnergieAvant.cutColumnPPM(fichier, col);
+			   else
+				   EnergieAvant.cutLinePPM(fichier, col);
 	   }
 	   //EnergieAvant.cutColumnPGM(fichier, col);
 	   
