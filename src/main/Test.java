@@ -536,6 +536,41 @@ class Test
 	   System.out.println("terminé");
    }
    
+   public static void pixDelCutColumnPGM(String fichier, int nb,int x, int y, int width, int height){
+	   
+	   int[][] image = SeamCarving.readpgm(fichier);
+	   SeamCarving.writepgm(image,"Test_Del_"+fichier);
+
+
+	   int[][] interest = SeamCarving.interest(image);
+	   interest = SeamCarving.pixelsToDelete(interest, x, y, width, height);
+	   //System.out.println("test "+interest[0][0]);
+	   SeamCarving.writepgm(interest,"Interest_"+fichier);
+	   
+	   Graph g = new Graph(image.length*image[0].length+2);
+	   
+	   int[][] res = image;
+	   
+	   Graph g2 = new Graph(res.length*res[0].length+2);	   
+	   
+	   for(int i = 0;i < nb;i++){
+		   System.out.println("Coupe "+(i+1)+" sur "+nb);
+		   g = new Graph(res.length*res[0].length+2);
+		   g = g.toGraph(interest);
+		   visite = new boolean[res.length*res[0].length+2];
+		   flotMax(g);
+		   res = cut(g,res);
+		   interest = SeamCarving.interest(res);
+		   interest = SeamCarving.pixelsToDelete(interest, x, y, width, height);
+		   g2 = new Graph(res.length*res[0].length+2);
+		   g2 = g2.toGraph(SeamCarving.interest(res));
+	   }
+	   
+	   SeamCarving.writepgm(res,"Test_Del_cutCol_"+fichier);
+	   
+	   System.out.println("terminé");
+   }
+   
    public static void pixDelCutColumnPPM(String fichier, int nb,int x, int y, int width, int height){
 	   
 	   RGB[][] image = SeamCarving.readppm(fichier);
@@ -567,9 +602,188 @@ class Test
 	   }
 	   
 	   SeamCarving.writeppm(res,"Test_Del_cutCol_"+fichier);
+	   
+	   System.out.println("terminé");
+   }
+   
+   public static void pixDelCutLinePGM(String fichier, int nb,int x, int y, int width, int height){
+	   
+	   int[][] image = SeamCarving.readpgm(fichier);
+	   SeamCarving.writepgm(image,"Test_Del_"+fichier);
+
+	   image = Test.rotateLeftPGM(image);
+	   
+	   int[][] interest = SeamCarving.interest(image);
+	   interest = SeamCarving.pixelsToDelete(interest, x, y, width, height);
+	   //System.out.println("test "+interest[0][0]);
+	   SeamCarving.writepgm(interest,"Interest_"+fichier);
+	   
+	   Graph g = new Graph(image.length*image[0].length+2);
+	   
+	   int[][] res = image;
+	   
+	   Graph g2 = new Graph(res.length*res[0].length+2);	   
+	   
+	   for(int i = 0;i < nb;i++){
+		   System.out.println("Coupe "+(i+1)+" sur "+nb);
+		   g = new Graph(res.length*res[0].length+2);
+		   g = g.toGraph(interest);
+		   visite = new boolean[res.length*res[0].length+2];
+		   flotMax(g);
+		   res = cut(g,res);
+		   interest = SeamCarving.interest(res);
+		   interest = SeamCarving.pixelsToDelete(interest, x, y, width, height);
+		   g2 = new Graph(res.length*res[0].length+2);
+		   g2 = g2.toGraph(SeamCarving.interest(res));
+	   }
+	   res = Test.rotateRightPGM(res);
+	   SeamCarving.writepgm(res,"Test_Del_cutLine_"+fichier);
+	   
+	   System.out.println("terminé");
+   }
+   
+   public static void pixDelCutLinePPM(String fichier, int nb,int x, int y, int width, int height){
+	   
+	   RGB[][] image = SeamCarving.readppm(fichier);
+	   SeamCarving.writeppm(image,"Test_Del_"+fichier);
+
+	   image = Test.rotateLeftPPM(image);
+	   
+	   int[][] interest = SeamCarving.interestPPM(image);
+	   interest = SeamCarving.pixelsToDelete(interest, x, y, width, height);
+	   //System.out.println("test "+interest[0][0]);
+	   SeamCarving.writepgm(interest,"Interest_"+fichier);
+	   
+	   Graph g = new Graph(image.length*image[0].length+2);
+	   
+	   RGB[][] res = image;
+	   
+	   Graph g2 = new Graph(res.length*res[0].length+2);	   
+	   
+	   for(int i = 0;i < nb;i++){
+		   System.out.println("Coupe "+(i+1)+" sur "+nb);
+		   g = new Graph(res.length*res[0].length+2);
+		   g = g.toGraph(interest);
+		   visite = new boolean[res.length*res[0].length+2];
+		   flotMax(g);
+		   res = cutPPM(g,res);
+		   interest = SeamCarving.interestPPM(res);
+		   interest = SeamCarving.pixelsToDelete(interest, x, y, width, height);
+		   g2 = new Graph(res.length*res[0].length+2);
+		   g2 = g2.toGraph(SeamCarving.interestPPM(res));
+	   }
+	   res = Test.rotateRightPPM(res);
+	   SeamCarving.writeppm(res,"Test_Del_cutLine_"+fichier);
+	   
+	   System.out.println("terminé");
+   }
+   
+   public static void pixKeepCutColumnPGM(String fichier, int nb,int x, int y, int width, int height){
+	   
+	   int[][] image = SeamCarving.readpgm(fichier);
+	   SeamCarving.writepgm(image,"Test_Keep_"+fichier);
+	   image = Test.rotateLeftPGM(image);
+	   
+	   int[][] interest = SeamCarving.interest(image);
+	   interest = SeamCarving.pixelsToKeep(interest, x, y, width, height);
+	   //System.out.println("test "+interest[0][0]);
+	   SeamCarving.writepgm(interest,"Interest_"+fichier);
+	   
+	   Graph g = new Graph(image.length*image[0].length+2);
+	   
+	   int[][] res = image;
+	   
+	   Graph g2 = new Graph(res.length*res[0].length+2);	   
+	   
+	   for(int i = 0;i < nb;i++){
+		   System.out.println("Coupe "+(i+1)+" sur "+nb);
+		   g = new Graph(res.length*res[0].length+2);
+		   g = g.toGraph(interest);
+		   visite = new boolean[res.length*res[0].length+2];
+		   flotMax(g);
+		   res = cut(g,res);
+		   interest = SeamCarving.interest(res);
+		   interest = SeamCarving.pixelsToKeep(interest, x, y, width, height);
+		   g2 = new Graph(res.length*res[0].length+2);
+		   g2 = g2.toGraph(SeamCarving.interest(res));
+	   }
+	   res = Test.rotateRightPGM(res);
+	   SeamCarving.writepgm(res,"Test_Keep_cutCol_"+fichier);
+	   
+	   System.out.println("terminé");
    }
    
    public static void pixKeepCutColumnPPM(String fichier, int nb,int x, int y, int width, int height){
+	   
+	   RGB[][] image = SeamCarving.readppm(fichier);
+	   SeamCarving.writeppm(image,"Test_Keep_"+fichier);
+	   image = Test.rotateLeftPPM(image);
+	   
+	   int[][] interest = SeamCarving.interestPPM(image);
+	   interest = SeamCarving.pixelsToKeep(interest, x, y, width, height);
+	   //System.out.println("test "+interest[0][0]);
+	   SeamCarving.writepgm(interest,"Interest_"+fichier);
+	   
+	   Graph g = new Graph(image.length*image[0].length+2);
+	   
+	   RGB[][] res = image;
+	   
+	   Graph g2 = new Graph(res.length*res[0].length+2);	   
+	   
+	   for(int i = 0;i < nb;i++){
+		   System.out.println("Coupe "+(i+1)+" sur "+nb);
+		   g = new Graph(res.length*res[0].length+2);
+		   g = g.toGraph(interest);
+		   visite = new boolean[res.length*res[0].length+2];
+		   flotMax(g);
+		   res = cutPPM(g,res);
+		   interest = SeamCarving.interestPPM(res);
+		   interest = SeamCarving.pixelsToKeep(interest, x, y, width, height);
+		   g2 = new Graph(res.length*res[0].length+2);
+		   g2 = g2.toGraph(SeamCarving.interestPPM(res));
+	   }
+	   res = Test.rotateRightPPM(res);
+	   SeamCarving.writeppm(res,"Test_Keep_cutCol_"+fichier);
+	   
+	   System.out.println("terminé");
+   }
+   
+   public static void pixKeepCutLinePGM(String fichier, int nb,int x, int y, int width, int height){
+	   
+	   int[][] image = SeamCarving.readpgm(fichier);
+	   SeamCarving.writepgm(image,"Test_Keep_"+fichier);
+
+
+	   int[][] interest = SeamCarving.interest(image);
+	   interest = SeamCarving.pixelsToKeep(interest, x, y, width, height);
+	   //System.out.println("test "+interest[0][0]);
+	   SeamCarving.writepgm(interest,"Interest_"+fichier);
+	   
+	   Graph g = new Graph(image.length*image[0].length+2);
+	   
+	   int[][] res = image;
+	   
+	   Graph g2 = new Graph(res.length*res[0].length+2);	   
+	   
+	   for(int i = 0;i < nb;i++){
+		   System.out.println("Coupe "+(i+1)+" sur "+nb);
+		   g = new Graph(res.length*res[0].length+2);
+		   g = g.toGraph(interest);
+		   visite = new boolean[res.length*res[0].length+2];
+		   flotMax(g);
+		   res = cut(g,res);
+		   interest = SeamCarving.interest(res);
+		   interest = SeamCarving.pixelsToKeep(interest, x, y, width, height);
+		   g2 = new Graph(res.length*res[0].length+2);
+		   g2 = g2.toGraph(SeamCarving.interest(res));
+	   }
+	   
+	   SeamCarving.writepgm(res,"Test_Keep_cutLine_"+fichier);
+	   
+	   System.out.println("terminé");
+   }
+   
+   public static void pixKeepCutLinePPM(String fichier, int nb,int x, int y, int width, int height){
 	   
 	   RGB[][] image = SeamCarving.readppm(fichier);
 	   SeamCarving.writeppm(image,"Test_Keep_"+fichier);
@@ -599,7 +813,7 @@ class Test
 		   g2 = g2.toGraph(SeamCarving.interestPPM(res));
 	   }
 	   
-	   SeamCarving.writeppm(res,"Test_Keep_cutCol_"+fichier);
+	   SeamCarving.writeppm(res,"Test_Keep_cutLine_"+fichier);
 	   
 	   System.out.println("terminé");
    }
@@ -768,29 +982,88 @@ class Test
 		   if(col < 1)
 			   System.out.println("Veuillez entrer un nombre superieur à 0");
 	   }
+	   int zone = 0;
+	   while(zone < 1 || zone > 3){
+		   System.out.println("Voulez-vous definir une zone à supprimer/conserver dans l'image ?");
+		   System.out.println("1 : Ne rien faire");
+		   System.out.println("2 : Definir une zone à supprimer");
+		   System.out.println("3 : Definir une zone à conserver");
+		   zone = sc.nextInt();
+		   if(zone < 1 || zone > 3)
+			   System.out.println("L'option choisie n'est pas valide");
+	   }
+	   int x = -1;
+	   int y = -1;
+	   int width = -1;
+	   int height = -1;
+	   if(zone != 1){
+		   while(x < 0 || y <0){
+			   System.out.println("Veuillez entrer les coordonnées d'un point (angle en haut à gauche"
+					   + "de la zone definie)");
+			   x = sc.nextInt();
+			   y = sc.nextInt();
+			   if(x < 0 || y <0)
+				   System.out.println("L'option choisie n'est pas valide");
+		   }
+		   while(width < 0 || height < 0){
+			   System.out.println("Veuillez entrer les largeur et hauteur de la zone");
+			   width = sc.nextInt();
+			   height = sc.nextInt();
+			   if(width < 0 || height <0)
+				   System.out.println("L'option choisie n'est pas valide");
+		   }
+	   }
 	   System.out.println("Vous voulez supprimez "+col+" colonnes");
 	   if(algo == 1){
 		   if(fichier == "ex1.pgm" || fichier == "ex2.pgm" || fichier == "ex3.pgm")
-			   if(type == 1)
-				   cutColumnPGM(fichier,col);
-			   else
-				   cutLinePGM(fichier,col);
+			   if(type == 1){
+				   if(zone == 2){
+					   pixDelCutColumnPGM(fichier,col,x,y,width,height);
+				   }else if(zone == 3){
+					   pixKeepCutColumnPGM(fichier,col,x,y,width,height);
+				   }else{
+					   cutColumnPGM(fichier,col);
+				   }
+			   }else{
+				   if(zone == 2){
+					   pixDelCutLinePGM(fichier,col,x,y,width,height);
+				   }else if(zone == 3){
+					   pixKeepCutLinePGM(fichier,col,x,y,width,height);
+				   }else{
+					   cutLinePGM(fichier,col);
+				   }
+			   }
 		   else
-			   if(type == 1)
-				   cutColumnPPM(fichier,col);
-			   else
-				   cutLinePPM(fichier,col);
+			   if(type == 1){
+				   if(zone == 2){
+					   pixDelCutColumnPPM(fichier,col,x,y,width,height);
+				   }else if(zone == 3){
+					   pixKeepCutColumnPPM(fichier,col,x,y,width,height);
+				   }else{
+					   cutColumnPPM(fichier,col);
+				   }
+			   }else{
+				   if(zone == 2){
+					   pixDelCutLinePPM(fichier,col,x,y,width,height);
+				   }else if(zone == 3){
+					   pixKeepCutLinePPM(fichier,col,x,y,width,height);
+				   }else{
+					   cutLinePPM(fichier,col);
+				   }
+			   }
 	   }else{
 		   if(fichier == "ex1.pgm" || fichier == "ex2.pgm" || fichier == "ex3.pgm")
-			   if(type == 1)
+			   if(type == 1){
 				   EnergieAvant.cutColumnPGM(fichier, col);
-			   else
+			   }else{
 				   EnergieAvant.cutLinePGM(fichier, col);
+			   }
 		   else
-			   if(type == 1)
+			   if(type == 1){
 				   EnergieAvant.cutColumnPPM(fichier, col);
-			   else
+			   }else{
 				   EnergieAvant.cutLinePPM(fichier, col);
+			   }
 	   }
 	   //EnergieAvant.cutColumnPGM(fichier, col);
 	   
