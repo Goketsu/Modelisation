@@ -191,59 +191,32 @@ public class EnergieAvant {
 		int height = itrRight.length;
 		int i,j;
 		
-		//System.out.println("largeur : "+width);
-		//System.out.println("hauteur : "+height);
-		
-		//Graph g = new Graph(width*height+2);
-		//int[][] inter = SeamCarving.interest(itr);
-		/*
-		for(i = 0 ; i < height; i++){
-			g.addEdge(new Edge(0,i+1,-1,0));
-		}
-		*/
 		Graph g = new Graph(itrRight.length*itrRight[0].length+2);
-		//System.out.println("taille : "+width*height+2);
 		int nb= 0;
 		for (i = 0; i < width-1; i++){
 			for (j = 0; j < height ; j++){
 					int oriArc = i * height +j +1;
 					int destArc = oriArc +height;
-					//System.out.println("i = " + i + ", j = " + j);
-					//System.out.println("origine     : " + oriArc);
-					//System.out.println("destination : " + destArc);
 					
-					
-					
-					//System.out.println("arc : " + oriArc + " -> " + destArc);
 					g.addEdge(new Edge(oriArc, destArc, itrRight[j][i],0));nb++;
-				//g.addEdge(new Edge(width*i+j+1-i, height*(i+1)+j+1, inter[j][i],0));
 				
 				if(j>0){
-					//System.out.println("arc : " + (destArc -1) + " -> " + oriArc);
 					g.addEdge(new Edge(destArc -1, oriArc, -1,0));nb++;
 				}
 				
-				
-					
-				//System.out.println("arc : " + destArc + " -> " + oriArc);
 				g.addEdge(new Edge(destArc, oriArc, -1,0));nb++;
 				
 				if(j!=height-1){
-					//System.out.println("arc : " + (destArc +1) + " -> " + oriArc);
 					g.addEdge(new Edge(destArc +1, oriArc, -1,0));
 					nb++;
 				}
-				
-				//}
 			}
 		}
-		//System.out.println("nb : " + nb);
-		//System.out.println("\n");
 		
 		for(i = 1 ; i <= height; i++){
-			//System.out.println("arc : " + 0 + " -> " + i);
 			g.addEdge(new Edge(0, i,-1,0));
 		}
+		
 		for (i = 0; i < width; i++){
 			for (j = 0; j < height-1 ; j++){
 					int oriArc = i * height +j +1;
@@ -254,7 +227,6 @@ public class EnergieAvant {
 		}
 		
 		for(i = 0 ; i < height; i++){
-			//System.out.println("arc : " + ((height*width -height +1 +i)) + " -> " +(width*height+1));
 			g.addEdge(new Edge((height*width -height +1 +i),width*height+1,itrRight[i][width-1],0));
 		}
 		
@@ -279,7 +251,6 @@ public class EnergieAvant {
 			itrD = interestDown(res);
 			itrU = interestUp(res);
 			g = EnergieAvant.toGraph(itrR,itrD,itrU);
-			//g3 = g3.toGraph(SeamCarving.interest(res));
 			Test.visite = new boolean[res.length*res[0].length+2];
 			Test.flotMax(g);
 			res = Test.cut(g,res);
@@ -288,7 +259,76 @@ public class EnergieAvant {
 		}
 		
 		SeamCarving.writepgm(res,"energie_cutCol_"+fichier);
-		//return image;
+		System.out.println("terminé");
+	}
+	
+	public static void pixDelCutColumnPGM(String fichier, int nb,int x, int y, int width, int height){
+		int[][] image = SeamCarving.readpgm(fichier);
+		SeamCarving.writepgm(image,"energie_before_"+fichier);
+		
+		int[][] itrR = interestRight(image);
+		itrR = SeamCarving.pixelsToDelete(itrR, x, y, width, height);
+		int[][] itrD = interestDown(image);
+		itrD = SeamCarving.pixelsToDelete(itrD, x, y, width, height);
+		int[][] itrU = interestUp(image);
+		itrU = SeamCarving.pixelsToDelete(itrU, x, y, width, height);
+		Graph g = EnergieAvant.toGraph(itrR,itrD,itrU);
+		int[][] res = image;
+		Graph g2 = new Graph(res.length*res[0].length+2);
+		
+		for(int i = 0;i < nb;i++){
+			System.out.println("Coupe "+(i+1)+" sur "+nb);
+			g = new Graph(res.length*res[0].length+2);
+			itrR = interestRight(res);
+			itrR = SeamCarving.pixelsToDelete(itrR, x, y, width, height);
+			itrD = interestDown(res);
+			itrD = SeamCarving.pixelsToDelete(itrD, x, y, width, height);
+			itrU = interestUp(res);
+			itrU = SeamCarving.pixelsToDelete(itrU, x, y, width, height);
+			g = EnergieAvant.toGraph(itrR,itrD,itrU);
+			Test.visite = new boolean[res.length*res[0].length+2];
+			Test.flotMax(g);
+			res = Test.cut(g,res);
+			g2 = new Graph(res.length*res[0].length+2);
+			g2 = g2.toGraph(res);
+		}
+		
+		SeamCarving.writepgm(res,"energie_Del_cutCol_"+fichier);
+		System.out.println("terminé");
+	}
+	
+	public static void pixKeepCutColumnPGM(String fichier, int nb,int x, int y, int width, int height){
+		int[][] image = SeamCarving.readpgm(fichier);
+		SeamCarving.writepgm(image,"energie_before_"+fichier);
+		
+		int[][] itrR = interestRight(image);
+		itrR = SeamCarving.pixelsToKeep(itrR, x, y, width, height);
+		int[][] itrD = interestDown(image);
+		itrD = SeamCarving.pixelsToKeep(itrD, x, y, width, height);
+		int[][] itrU = interestUp(image);
+		itrU = SeamCarving.pixelsToKeep(itrU, x, y, width, height);
+		Graph g = EnergieAvant.toGraph(itrR,itrD,itrU);
+		int[][] res = image;
+		Graph g2 = new Graph(res.length*res[0].length+2);
+		
+		for(int i = 0;i < nb;i++){
+			System.out.println("Coupe "+(i+1)+" sur "+nb);
+			g = new Graph(res.length*res[0].length+2);
+			itrR = interestRight(res);
+			itrR = SeamCarving.pixelsToKeep(itrR, x, y, width, height);
+			itrD = interestDown(res);
+			itrD = SeamCarving.pixelsToKeep(itrD, x, y, width, height);
+			itrU = interestUp(res);
+			itrU = SeamCarving.pixelsToKeep(itrU, x, y, width, height);
+			g = EnergieAvant.toGraph(itrR,itrD,itrU);
+			Test.visite = new boolean[res.length*res[0].length+2];
+			Test.flotMax(g);
+			res = Test.cut(g,res);
+			g2 = new Graph(res.length*res[0].length+2);
+			g2 = g2.toGraph(res);
+		}
+		
+		SeamCarving.writepgm(res,"energie_Keep_cutCol_"+fichier);
 		System.out.println("terminé");
 	}
 	
@@ -311,7 +351,6 @@ public class EnergieAvant {
 			itrD = interestDown(res);
 			itrU = interestUp(res);
 			g = EnergieAvant.toGraph(itrR,itrD,itrU);
-			//g3 = g3.toGraph(SeamCarving.interest(res));
 			Test.visite = new boolean[res.length*res[0].length+2];
 			Test.flotMax(g);
 			res = Test.cut(g,res);
@@ -320,7 +359,78 @@ public class EnergieAvant {
 		}
 		res = Test.rotateRightPGM(res);
 		SeamCarving.writepgm(res,"energie_cutLine_"+fichier);
-		//return image;
+		System.out.println("terminé");
+	}
+	
+	public static void pixDelCutLinePGM(String fichier, int nb,int x, int y, int width, int height){
+		int[][] image = SeamCarving.readpgm(fichier);
+		SeamCarving.writepgm(image,"energie_before_"+fichier);
+		
+		image = Test.rotateLeftPGM(image);
+		int[][] itrR = interestRight(image);
+		itrR = SeamCarving.pixelsToDelete(itrR, x, y, width, height);
+		int[][] itrD = interestDown(image);
+		itrD = SeamCarving.pixelsToDelete(itrD, x, y, width, height);
+		int[][] itrU = interestUp(image);
+		itrU = SeamCarving.pixelsToDelete(itrU, x, y, width, height);
+		Graph g = EnergieAvant.toGraph(itrR,itrD,itrU);
+		int[][] res = image;
+		Graph g2 = new Graph(res.length*res[0].length+2);
+		
+		for(int i = 0;i < nb;i++){
+			System.out.println("Coupe "+(i+1)+" sur "+nb);
+			g = new Graph(res.length*res[0].length+2);
+			itrR = interestRight(res);
+			itrR = SeamCarving.pixelsToDelete(itrR, x, y, width, height);
+			itrD = interestDown(res);
+			itrD = SeamCarving.pixelsToDelete(itrD, x, y, width, height);
+			itrU = interestUp(res);
+			itrU = SeamCarving.pixelsToDelete(itrU, x, y, width, height);
+			g = EnergieAvant.toGraph(itrR,itrD,itrU);
+			Test.visite = new boolean[res.length*res[0].length+2];
+			Test.flotMax(g);
+			res = Test.cut(g,res);
+			g2 = new Graph(res.length*res[0].length+2);
+			g2 = g2.toGraph(res);
+		}
+		res = Test.rotateRightPGM(res);
+		SeamCarving.writepgm(res,"energie_Del_cutLine_"+fichier);
+		System.out.println("terminé");
+	}
+	
+	public static void pixKeepCutLinePGM(String fichier, int nb,int x, int y, int width, int height){
+		int[][] image = SeamCarving.readpgm(fichier);
+		SeamCarving.writepgm(image,"energie_before_"+fichier);
+		
+		image = Test.rotateLeftPGM(image);
+		int[][] itrR = interestRight(image);
+		itrR = SeamCarving.pixelsToKeep(itrR, x, y, width, height);
+		int[][] itrD = interestDown(image);
+		itrD = SeamCarving.pixelsToKeep(itrD, x, y, width, height);
+		int[][] itrU = interestUp(image);
+		itrU = SeamCarving.pixelsToKeep(itrU, x, y, width, height);
+		Graph g = EnergieAvant.toGraph(itrR,itrD,itrU);
+		int[][] res = image;
+		Graph g2 = new Graph(res.length*res[0].length+2);
+		
+		for(int i = 0;i < nb;i++){
+			System.out.println("Coupe "+(i+1)+" sur "+nb);
+			g = new Graph(res.length*res[0].length+2);
+			itrR = interestRight(res);
+			itrR = SeamCarving.pixelsToKeep(itrR, x, y, width, height);
+			itrD = interestDown(res);
+			itrD = SeamCarving.pixelsToKeep(itrD, x, y, width, height);
+			itrU = interestUp(res);
+			itrU = SeamCarving.pixelsToKeep(itrU, x, y, width, height);
+			g = EnergieAvant.toGraph(itrR,itrD,itrU);
+			Test.visite = new boolean[res.length*res[0].length+2];
+			Test.flotMax(g);
+			res = Test.cut(g,res);
+			g2 = new Graph(res.length*res[0].length+2);
+			g2 = g2.toGraph(res);
+		}
+		res = Test.rotateRightPGM(res);
+		SeamCarving.writepgm(res,"energie_Keep_cutLine_"+fichier);
 		System.out.println("terminé");
 	}
 	
@@ -342,16 +452,78 @@ public class EnergieAvant {
 			itrD = interestDownPPM(res);
 			itrU = interestUpPPM(res);
 			g = EnergieAvant.toGraph(itrR,itrD,itrU);
-			//g3 = g3.toGraph(SeamCarving.interest(res));
 			Test.visite = new boolean[res.length*res[0].length+2];
 			Test.flotMax(g);
 			res = Test.cutPPM(g,res);
-			//g2 = new Graph(res.length*res[0].length+2);
-			//g2 = g2.toGraph(res);
 		}
 
 		SeamCarving.writeppm(res,"energie_cutCol_"+fichier);
-		//return image;
+		System.out.println("terminé");
+	}
+	
+	public static void pixDelCutColumnPPM(String fichier, int nb,int x, int y, int width, int height){
+		RGB[][] image = SeamCarving.readppm(fichier);
+		SeamCarving.writeppm(image,"energie_before_"+fichier);
+		
+		int[][] itrR = interestRightPPM(image);
+		itrR = SeamCarving.pixelsToDelete(itrR, x, y, width, height);
+		int[][] itrD = interestDownPPM(image);
+		itrD = SeamCarving.pixelsToDelete(itrD, x, y, width, height);
+		int[][] itrU = interestUpPPM(image);
+		itrU = SeamCarving.pixelsToDelete(itrU, x, y, width, height);
+		Graph g = EnergieAvant.toGraph(itrR,itrD,itrU);
+		RGB[][] res = image;
+		Graph g2 = new Graph(res.length*res[0].length+2);
+		
+		for(int i = 0;i < nb;i++){
+			System.out.println("Coupe "+(i+1)+" sur "+nb);
+			g = new Graph(res.length*res[0].length+2);
+			itrR = interestRightPPM(res);
+			itrR = SeamCarving.pixelsToDelete(itrR, x, y, width, height);
+			itrD = interestDownPPM(res);
+			itrD = SeamCarving.pixelsToDelete(itrD, x, y, width, height);
+			itrU = interestUpPPM(res);
+			itrU = SeamCarving.pixelsToDelete(itrU, x, y, width, height);
+			g = EnergieAvant.toGraph(itrR,itrD,itrU);
+			Test.visite = new boolean[res.length*res[0].length+2];
+			Test.flotMax(g);
+			res = Test.cutPPM(g,res);
+		}
+
+		SeamCarving.writeppm(res,"energie_Del_cutCol_"+fichier);
+		System.out.println("terminé");
+	}
+	
+	public static void pixKeepCutColumnPPM(String fichier, int nb,int x, int y, int width, int height){
+		RGB[][] image = SeamCarving.readppm(fichier);
+		SeamCarving.writeppm(image,"energie_before_"+fichier);
+		
+		int[][] itrR = interestRightPPM(image);
+		itrR = SeamCarving.pixelsToKeep(itrR, x, y, width, height);
+		int[][] itrD = interestDownPPM(image);
+		itrD = SeamCarving.pixelsToKeep(itrD, x, y, width, height);
+		int[][] itrU = interestUpPPM(image);
+		itrU = SeamCarving.pixelsToKeep(itrU, x, y, width, height);
+		Graph g = EnergieAvant.toGraph(itrR,itrD,itrU);
+		RGB[][] res = image;
+		Graph g2 = new Graph(res.length*res[0].length+2);
+		
+		for(int i = 0;i < nb;i++){
+			System.out.println("Coupe "+(i+1)+" sur "+nb);
+			g = new Graph(res.length*res[0].length+2);
+			itrR = interestRightPPM(res);
+			itrR = SeamCarving.pixelsToKeep(itrR, x, y, width, height);
+			itrD = interestDownPPM(res);
+			itrD = SeamCarving.pixelsToKeep(itrD, x, y, width, height);
+			itrU = interestUpPPM(res);
+			itrU = SeamCarving.pixelsToKeep(itrU, x, y, width, height);
+			g = EnergieAvant.toGraph(itrR,itrD,itrU);
+			Test.visite = new boolean[res.length*res[0].length+2];
+			Test.flotMax(g);
+			res = Test.cutPPM(g,res);
+		}
+
+		SeamCarving.writeppm(res,"energie_Keep_cutCol_"+fichier);
 		System.out.println("terminé");
 	}
 	
@@ -374,83 +546,85 @@ public class EnergieAvant {
 			itrD = interestDownPPM(res);
 			itrU = interestUpPPM(res);
 			g = EnergieAvant.toGraph(itrR,itrD,itrU);
-			//g3 = g3.toGraph(SeamCarving.interest(res));
 			Test.visite = new boolean[res.length*res[0].length+2];
 			Test.flotMax(g);
 			res = Test.cutPPM(g,res);
-			//g2 = new Graph(res.length*res[0].length+2);
-			//g2 = g2.toGraph(res);
 		}
 
 		res = Test.rotateRightPPM(res);
 		SeamCarving.writeppm(res,"energie_cutLine_"+fichier);
+		System.out.println("terminé");
+	}
+	
+	public static void pixDelCutLinePPM(String fichier, int nb,int x, int y, int width, int height){
+		RGB[][] image = SeamCarving.readppm(fichier);
+		image = Test.rotateLeftPPM(image);
+
+		SeamCarving.writeppm(image,"energie_before_"+fichier);
+		int[][] itrR = interestRightPPM(image);
+		itrR = SeamCarving.pixelsToDelete(itrR, x, y, width, height);
+		int[][] itrD = interestDownPPM(image);
+		itrD = SeamCarving.pixelsToDelete(itrD, x, y, width, height);
+		int[][] itrU = interestUpPPM(image);
+		itrU = SeamCarving.pixelsToDelete(itrU, x, y, width, height);
+		Graph g = EnergieAvant.toGraph(itrR,itrD,itrU);
+		RGB[][] res = image;
+		Graph g2 = new Graph(res.length*res[0].length+2);
+		
+		for(int i = 0;i < nb;i++){
+			System.out.println("Coupe  "+(i+1)+" sur "+nb);
+			g = new Graph(res.length*res[0].length+2);
+			itrR = interestRightPPM(res);
+			itrR = SeamCarving.pixelsToDelete(itrR, x, y, width, height);
+			itrD = interestDownPPM(res);
+			itrD = SeamCarving.pixelsToDelete(itrD, x, y, width, height);
+			itrU = interestUpPPM(res);
+			itrU = SeamCarving.pixelsToDelete(itrU, x, y, width, height);
+			g = EnergieAvant.toGraph(itrR,itrD,itrU);
+			Test.visite = new boolean[res.length*res[0].length+2];
+			Test.flotMax(g);
+			res = Test.cutPPM(g,res);
+		}
+
+		res = Test.rotateRightPPM(res);
+		SeamCarving.writeppm(res,"energie_Del_cutLine_"+fichier);
+		System.out.println("terminé");
+	}
+	
+	public static void pixKeepCutLinePPM(String fichier, int nb,int x, int y, int width, int height){
+		RGB[][] image = SeamCarving.readppm(fichier);
+		image = Test.rotateLeftPPM(image);
+
+		SeamCarving.writeppm(image,"energie_before_"+fichier);
+		int[][] itrR = interestRightPPM(image);
+		itrR = SeamCarving.pixelsToKeep(itrR, x, y, width, height);
+		int[][] itrD = interestDownPPM(image);
+		itrD = SeamCarving.pixelsToKeep(itrD, x, y, width, height);
+		int[][] itrU = interestUpPPM(image);
+		itrU = SeamCarving.pixelsToKeep(itrU, x, y, width, height);
+		Graph g = EnergieAvant.toGraph(itrR,itrD,itrU);
+		RGB[][] res = image;
+		Graph g2 = new Graph(res.length*res[0].length+2);
+		
+		for(int i = 0;i < nb;i++){
+			System.out.println("Coupe  "+(i+1)+" sur "+nb);
+			g = new Graph(res.length*res[0].length+2);
+			itrR = interestRightPPM(res);
+			itrR = SeamCarving.pixelsToKeep(itrR, x, y, width, height);
+			itrD = interestDownPPM(res);
+			itrD = SeamCarving.pixelsToKeep(itrD, x, y, width, height);
+			itrU = interestUpPPM(res);
+			itrU = SeamCarving.pixelsToKeep(itrU, x, y, width, height);
+			g = EnergieAvant.toGraph(itrR,itrD,itrU);
+			Test.visite = new boolean[res.length*res[0].length+2];
+			Test.flotMax(g);
+			res = Test.cutPPM(g,res);
+		}
+
+		res = Test.rotateRightPPM(res);
+		SeamCarving.writeppm(res,"energie_Keep_cutLine_"+fichier);
 		//return image;
 		System.out.println("terminé");
 	}
 	
-	public static void main(String[] args){
-		int[][] tab =  {{3,11,24,39},
-			  	  		{8,21,29,39},
-			  	  		{74,80,100,200},
-						};
-		
-		Scanner sc = new Scanner(System.in);
-	    System.out.println("Combien de colonne voulez-vous supprimer ?");
-	    int nb = sc.nextInt();
-	    System.out.println("suppression de "+nb+" colonnes");
-	    cutColumnPPM("len_top.ppm", nb);
-		
-	    /*
-		int[][] image = SeamCarving.readpgm("ex1.pgm");
-		
-		int[][] itrR = interestRight(image);
-		int[][] itrD = interestDown(image);
-		int[][] itrU = interestUp(image);
-		Graph g = EnergieAvant.toGraph(itrR,itrD,itrU);
-		g.writeFile("energie_graph");
-		
-		Test.visite = new boolean[image.length*image[0].length+2];
-		Test.flotMax(g);
-		   
-		   //g.writeFile("test2_ex1");
-		   
-		int[][] res = Test.cut(g,image);
-		Graph g2 = new Graph(res.length*res[0].length+2);
-		g2 = g2.toGraph(res);
-		   
-		   
-		   
-		for(int i = 0;i < nb;i++){
-			System.out.println("ITERATION "+i+1);
-			Graph g3 = new Graph(res.length*res[0].length+2);
-			itrR = interestRight(res);
-			itrD = interestDown(res);
-			itrU = interestUp(res);
-			g3 = EnergieAvant.toGraph(itrR,itrD,itrU);
-			//g3 = g3.toGraph(SeamCarving.interest(res));
-			Test.visite = new boolean[res.length*res[0].length+2];
-			Test.flotMax(g3);
-			res = Test.cut(g3,res);
-			g3 = new Graph(res.length*res[0].length+2);
-			g3 = g3.toGraph(res);
-		}
-		
-		SeamCarving.writepgm(res,"test_cut.pgm");
-		   
-		   
-		   
-		//g.writeFile("test_graph");
-		SeamCarving.writepgm(image, "test.pgm");
-		   
-		System.out.println("termine ");
-		
-		/*
-		for(int i = 0;i < itrR.length; i++){
-			for(int j = 0; j < itrR[0].length; j++){
-				System.out.println(itrR[i][j]);
-			}
-		}
-		*/
-	}
-
 }

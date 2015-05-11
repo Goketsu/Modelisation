@@ -180,10 +180,6 @@ public class SeamCarving
 		   int count = 0;
 		   System.out.println(8/2);
 		   while (count < height*width) {
-			  //im[count / width*3][count % width*3].setR(s.nextInt());
-			  //im[count / width*3][count % width*3].setG(s.nextInt());
-			  //im[count / width*3][count % width*3].setB(s.nextInt());
-			  //System.out.println(count);
 			  im[count / width]
 					  [count % width] = new RGB(s.nextInt(),s.nextInt(),s.nextInt());
 			  count++;
@@ -214,7 +210,6 @@ public class SeamCarving
  	      for (int j = 1; j < width-1; ++j)
  	      {
  	    	  intermediaire = (image[i][j-1] + image[i][j+1]) /2;
- 	    	  //System.out.println("intermediraire : "+intermediaire+" "+i+" "+j);
  	    	  if(intermediaire > image[i][j]){
  	    		  tab[i][j] = intermediaire - image[i][j];
  	    	  }else{
@@ -262,14 +257,11 @@ public class SeamCarving
 		  }
  	      for (int j = 1; j < width-1; ++j)
  	      {
- 	    	  //System.out.println(j);
- 	    	  //System.out.println(image[i][j+1].getR());
  	    	  intermediaireR = 
  	    			  (image[i][j-1].getR() 
  	    					  + image[i][j+1].getR()) /2;
  	    	  intermediaireG = (image[i][j-1].getG() + image[i][j+1].getG()) /2;
  	    	  intermediaireB = (image[i][j-1].getB() + image[i][j+1].getB()) /2;
- 	    	  //System.out.println("intermediraire : "+intermediaire+" "+i+" "+j);
  	    	  if(intermediaireR > image[i][j].getR()){
  	    		  tabR[i][j] = intermediaireR - image[i][j].getR();
  	    	  }else{
@@ -319,30 +311,15 @@ public class SeamCarving
 
 	   for(int i = 0;i < tabHeight; i++){
 		   for(int j = 0; j < tabWidth; j++){
-			   if(i == 50 && j == 100){
-				   System.out.println(i <= x+height);
-				   System.out.println(j <= y+width);
-				   System.out.println("x "+x);
-				   System.out.println("j "+j);
-				   System.out.println(j >= x);
-				   System.out.println(i >= y);
-			   }
+			   
 			   tab[i][j] = tab[i][j]+10;
 			   if(j >= x && i >= y && i < y+height && j < x+width){
 				   tab[i][j] = 0;
 				   cpt1++;
-				   //System.out.println("fdp "+tab[i][j]);
 			   }
-			   /*else{
-				   tab[i][j] = tab[i][j]+10;
-				   cpt2++;
-			   }*/
 		   }
 	   }
 	   
-	   System.out.println("nombre de 0 "+cpt1);
-	   System.out.println("nombre de +1 "+cpt2);
-	   System.out.println("ntm "+tab[0][0]);
 	   return tab;
    }
    
@@ -356,9 +333,6 @@ public class SeamCarving
 			   if(j >= x && i >= y && i < y+height && j < x+width){
 				   tab[i][j] = Integer.MAX_VALUE;
 			   }
-			   /*else{
-				   tab[i][j] = tab[i][j];
-			   }*/
 		   }
 	   }
 	   
@@ -380,16 +354,4 @@ public class SeamCarving
 	   return sb.toString();
    }
 
-   
-   public static void main(String[] args){
-	   RGB[][] tab = {{new RGB(255,255,255),new RGB(0,0,0)},
-	          	  	  {new RGB(255,0,0),new RGB(255,255,0)},
-	          	  	  {new RGB(0,255,0),new RGB(0,255,255)},
-	          	  	  {new RGB(0,0,255),new RGB(255,0,255)}};
-	   
-	   RGB[][] image = readppm("len_top.ppm");
-	   int[][] interest = interestPPM(image);
-	   writepgm(interest,"interet_len.pgm");
-	   writeppm(image,"len_test.ppm");
-   }
 }
