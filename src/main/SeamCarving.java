@@ -87,7 +87,7 @@ public class SeamCarving
 	        	
 	        	writer.close();
 	        	
-	        	System.out.println("DONE");
+	        	System.out.println("Creation du fichier "+filename+" terminée");
 	        }
 	        
 	        catch(Throwable t) {
@@ -148,7 +148,7 @@ public class SeamCarving
         	
         	writer.close();
         	
-        	System.out.println("DONE");
+        	System.out.println("Creation du fichier "+filename+" terminée");
         }
         
         catch(Throwable t) {

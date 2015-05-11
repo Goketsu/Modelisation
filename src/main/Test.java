@@ -183,18 +183,18 @@ class Test
 	   ArrayList<Edge> chemin = new ArrayList<Edge>();
 	   //System.out.println(g.adj(u).get(0));
 	   for(int i = 0;i < tab.length;i++){
-		   System.out.println("HFUIZHFIUHGZF : "+g.adj(0).get(i).to);
+		   //System.out.println("HFUIZHFIUHGZF : "+g.adj(0).get(i).to);
 		   chemin.add(g.adj(0).get(i));
 		   parcours.add(g.adj(0).get(i).to);
 		   while(!parcours.isEmpty()){
 			   u = parcours.remove(parcours.size()-1);
-			   System.out.println("Je visite "+u);
+			   //System.out.println("Je visite "+u);
 			   for(Edge e: g.adj(u)){
 				   System.out.println(e.to);
 				   System.out.println(e.used != e.capacity);
 				   if (!visite[e.to] && e.used != e.capacity && e.capacity >= 0){
 					   chemin.add(e);
-					   System.out.println("tralala : "+e.to);
+					   //System.out.println("tralala : "+e.to);
 					   parcours.add(e.to);
 					   visite[e.to] = true;
 					   //e.used++;
@@ -207,16 +207,18 @@ class Test
 				   break;
 			   }
 		   }
+		   /*
 		   for(Edge e : chemin){
 			   System.out.println("chemin : "+e);
-		   }
+		   }*/
 		   toDelete.add(chemin.get(chemin.size()-1).to);
 		   parcours.removeAll(parcours);
 		   chemin.removeAll(chemin);
 	   }
+	   /*
 	   for(Integer a : toDelete){
 		   System.out.println("a suppr : "+a);
-	   }
+	   }*/
 	   return toDelete;
    }
    
@@ -310,10 +312,10 @@ class Test
 				//   System.out.println("on y est presque "+tab[i][j]);
 		   }
 	   }
-	   System.out.println("to delete : "+toDelete.size());
-	   System.out.println("parcours : "+parcours.size());
+	   //System.out.println("to delete : "+toDelete.size());
+	   //System.out.println("parcours : "+parcours.size());
 	   //System.out.println("width ? : "+resultat[0].length);
-	   System.out.println(resultat[0][(resultat[0].length-1)]);
+	   //System.out.println(resultat[0][(resultat[0].length-1)]);
 	   //System.out.println("height ? : "+resultat.length);
 	   //System.out.println("tableau : "+tab);
 	   return resultat;
@@ -364,7 +366,7 @@ class Test
 	   //a = toDelete.get(2)/tab.length;
 	   //b = toDelete.get(2)/tab.length-1;
 	   //System.out.println("parcours : "+parcours);
-	   System.out.println(resultat[0].length);
+	   //System.out.println(resultat[0].length);
 	   for(int i = 0;i < resultat.length;i++){
 		   yep = false;
 		   for(int j = 0;j < resultat[0].length;j++){
@@ -397,8 +399,8 @@ class Test
 		   //System.out.println("serious ?"+(resultat[0].length-1));
 		   resultat[i][(resultat[0].length-1)]= tab[i][(resultat[0].length)];
 	   }
-	   System.out.println("to delete : "+toDelete.size());
-	   System.out.println("parcours : "+parcours.size());
+	   //System.out.println("to delete : "+toDelete.size());
+	   //System.out.println("parcours : "+parcours.size());
 	   //System.out.println("width ? : "+resultat[0].length);
 	   //System.out.println("height ? : "+resultat.length);
 	   //System.out.println("tableau : "+tab);
@@ -409,8 +411,8 @@ class Test
    public static int[][] rotateLeftPGM(int[][] tab){
 	   int width = tab[0].length;
 	   int height = tab.length;
-	   System.out.println("largeur : "+width);
-	   System.out.println("hauteur : "+height);
+	   //System.out.println("largeur : "+width);
+	   //System.out.println("hauteur : "+height);
 	   int[][] tab2 = new int[width][height];
 	   for (int i = 0; i < width; i++){
 			for (int j = 0; j < height ; j++){
@@ -421,16 +423,16 @@ class Test
 				//System.out.println("tab 2 : "+tab2[i][j]);
 			}
 	   }
-	   System.out.println("largeur 2 : "+tab2[0].length);
-	   System.out.println("hauteur 2 : "+tab2.length);
+	   //System.out.println("largeur 2 : "+tab2[0].length);
+	   //System.out.println("hauteur 2 : "+tab2.length);
 	   return tab2;
    }
    
    public static RGB[][] rotateLeftPPM(RGB[][] tab){
 	   int width = tab[0].length;
 	   int height = tab.length;
-	   System.out.println("largeur : "+width);
-	   System.out.println("hauteur : "+height);
+	   //System.out.println("largeur : "+width);
+	   //System.out.println("hauteur : "+height);
 	   RGB[][] tab2 = new RGB[width][height];
 	   for (int i = 0; i < width; i++){
 			for (int j = 0; j < height ; j++){
@@ -441,16 +443,16 @@ class Test
 				//System.out.println("tab 2 : "+tab2[i][j]);
 			}
 	   }
-	   System.out.println("largeur 2 : "+tab2[0].length);
-	   System.out.println("hauteur 2 : "+tab2.length);
+	   //System.out.println("largeur 2 : "+tab2[0].length);
+	   //System.out.println("hauteur 2 : "+tab2.length);
 	   return tab2;
    }
    
    public static int[][] rotateRightPGM(int[][] tab){
 	   int width = tab[0].length;
 	   int height = tab.length;
-	   System.out.println("largeur : "+width);
-	   System.out.println("hauteur : "+height);
+	   //System.out.println("largeur : "+width);
+	   //System.out.println("hauteur : "+height);
 	   int[][] tab2 = new int[width][height];
 	   for (int i = 0; i < width; i++){
 			for (int j = 0; j < height ; j++){
@@ -458,16 +460,16 @@ class Test
 				//System.out.println("tab 2 : "+tab2[i][j]);
 			}
 	   }
-	   System.out.println("largeur 2 : "+tab2[0].length);
-	   System.out.println("hauteur 2 : "+tab2.length);
+	   //System.out.println("largeur 2 : "+tab2[0].length);
+	   //System.out.println("hauteur 2 : "+tab2.length);
 	   return tab2;
    }
    
    public static RGB[][] rotateRightPPM(RGB[][] tab){
 	   int width = tab[0].length;
 	   int height = tab.length;
-	   System.out.println("largeur : "+width);
-	   System.out.println("hauteur : "+height);
+	   //System.out.println("largeur : "+width);
+	   //System.out.println("hauteur : "+height);
 	   RGB[][] tab2 = new RGB[width][height];
 	   for (int i = 0; i < width; i++){
 			for (int j = 0; j < height ; j++){
@@ -475,8 +477,8 @@ class Test
 				//System.out.println("tab 2 : "+tab2[i][j]);
 			}
 	   }
-	   System.out.println("largeur 2 : "+tab2[0].length);
-	   System.out.println("hauteur 2 : "+tab2.length);
+	   //System.out.println("largeur 2 : "+tab2[0].length);
+	   //System.out.println("hauteur 2 : "+tab2.length);
 	   return tab2;
    }
    
@@ -489,7 +491,7 @@ class Test
 	   int[][] res = tab;
 	   Graph g2 = new Graph(res.length*res[0].length+2);
 	   for(int i = 0;i < nb; i++){
-		   System.out.println("ITERATION "+i);
+		   System.out.println("Coupe "+(i+1)+" sur "+nb);
 		   g = new Graph(res.length*res[0].length+2);
 		   g = g.toGraph(SeamCarving.interest(res));
 		   visite = new boolean[res.length*res[0].length+2];
@@ -504,7 +506,7 @@ class Test
 	   //g2.writeFile("test_graph_cutLine");
 	   SeamCarving.writepgm(res,"test_cutCol_"+fichier);
 	   
-	   System.out.println("termine ");
+	   System.out.println("terminé");
    }
    
    public static void cutColumnPPM(String fichier, int nb){
@@ -519,7 +521,7 @@ class Test
 	   Graph g2 = new Graph(res.length*res[0].length+2);	   
 	   
 	   for(int i = 0;i < nb;i++){
-		   System.out.println("ITERATION "+i);
+		   System.out.println("Coupe "+(i+1)+" sur "+nb);
 		   g = new Graph(res.length*res[0].length+2);
 		   g = g.toGraph(SeamCarving.interestPPM(res));
 		   visite = new boolean[res.length*res[0].length+2];
@@ -530,6 +532,8 @@ class Test
 	   }
 	   
 	   SeamCarving.writeppm(res,"Test_cutCol_"+fichier);
+	   
+	   System.out.println("terminé");
    }
    
    public static void pixDelCutColumnPPM(String fichier, int nb,int x, int y, int width, int height){
@@ -550,7 +554,7 @@ class Test
 	   Graph g2 = new Graph(res.length*res[0].length+2);	   
 	   
 	   for(int i = 0;i < nb;i++){
-		   System.out.println("ITERATION "+i);
+		   System.out.println("Coupe "+(i+1)+" sur "+nb);
 		   g = new Graph(res.length*res[0].length+2);
 		   g = g.toGraph(interest);
 		   visite = new boolean[res.length*res[0].length+2];
@@ -583,7 +587,7 @@ class Test
 	   Graph g2 = new Graph(res.length*res[0].length+2);	   
 	   
 	   for(int i = 0;i < nb;i++){
-		   System.out.println("ITERATION "+i);
+		   System.out.println("Coupe "+(i+1)+" sur "+nb);
 		   g = new Graph(res.length*res[0].length+2);
 		   g = g.toGraph(interest);
 		   visite = new boolean[res.length*res[0].length+2];
@@ -596,6 +600,8 @@ class Test
 	   }
 	   
 	   SeamCarving.writeppm(res,"Test_Keep_cutCol_"+fichier);
+	   
+	   System.out.println("terminé");
    }
    
    public static void cutLinePGM(String fichier, int nb){
@@ -608,7 +614,7 @@ class Test
 	   int[][] res = tab;
 	   Graph g2 = new Graph(res.length*res[0].length+2);
 	   for(int i = 0;i < nb; i++){
-		   System.out.println("ITERATION "+i);
+		   System.out.println("Coupe "+(i+1)+" sur "+nb);
 		   g = new Graph(res.length*res[0].length+2);
 		   g = g.toGraph(SeamCarving.interest(res));
 		   visite = new boolean[res.length*res[0].length+2];
@@ -630,7 +636,7 @@ class Test
 	   
 	   //bfs(g,0);
 	   
-	   System.out.println("termine ");
+	   System.out.println("terminé");
    }
    
    public static void cutLinePPM(String fichier, int nb){
@@ -643,7 +649,7 @@ class Test
 	   RGB[][] res = tab;
 	   Graph g2 = new Graph(res.length*res[0].length+2);
 	   for(int i = 0;i < 10; i++){
-		   System.out.println("ITERATION "+i);
+		   System.out.println("Coupe "+(i+1)+" sur "+nb);
 		   g = new Graph(res.length*res[0].length+2);
 		   g = g.toGraph(SeamCarving.interestPPM(res));
 		   visite = new boolean[res.length*res[0].length+2];
@@ -665,7 +671,7 @@ class Test
 	   
 	   //bfs(g,0);
 	   
-	   System.out.println("termine ");
+	   System.out.println("terminé");
    }
    
    

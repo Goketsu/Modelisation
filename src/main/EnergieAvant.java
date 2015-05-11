@@ -263,7 +263,8 @@ public class EnergieAvant {
 	
 	public static void cutColumnPGM(String fichier, int nb){
 		int[][] image = SeamCarving.readpgm(fichier);
-
+		SeamCarving.writepgm(image,"energie_before_"+fichier);
+		
 		int[][] itrR = interestRight(image);
 		int[][] itrD = interestDown(image);
 		int[][] itrU = interestUp(image);
@@ -272,7 +273,7 @@ public class EnergieAvant {
 		Graph g2 = new Graph(res.length*res[0].length+2);
 		
 		for(int i = 0;i < nb;i++){
-			System.out.println("ITERATION "+(i+1));
+			System.out.println("Coupe "+(i+1)+" sur "+nb);
 			g = new Graph(res.length*res[0].length+2);
 			itrR = interestRight(res);
 			itrD = interestDown(res);
@@ -288,11 +289,13 @@ public class EnergieAvant {
 		
 		SeamCarving.writepgm(res,"energie_cutCol_"+fichier);
 		//return image;
+		System.out.println("terminé");
 	}
 	
 	public static void cutLinePGM(String fichier, int nb){
 		int[][] image = SeamCarving.readpgm(fichier);
-
+		SeamCarving.writepgm(image,"energie_before_"+fichier);
+		
 		image = Test.rotateLeftPGM(image);
 		int[][] itrR = interestRight(image);
 		int[][] itrD = interestDown(image);
@@ -302,7 +305,7 @@ public class EnergieAvant {
 		Graph g2 = new Graph(res.length*res[0].length+2);
 		
 		for(int i = 0;i < nb;i++){
-			System.out.println("ITERATION "+(i+1));
+			System.out.println("Coupe "+(i+1)+" sur "+nb);
 			g = new Graph(res.length*res[0].length+2);
 			itrR = interestRight(res);
 			itrD = interestDown(res);
@@ -318,10 +321,12 @@ public class EnergieAvant {
 		res = Test.rotateRightPGM(res);
 		SeamCarving.writepgm(res,"energie_cutLine_"+fichier);
 		//return image;
+		System.out.println("terminé");
 	}
 	
 	public static void cutColumnPPM(String fichier, int nb){
 		RGB[][] image = SeamCarving.readppm(fichier);
+		SeamCarving.writeppm(image,"energie_before_"+fichier);
 		
 		int[][] itrR = interestRightPPM(image);
 		int[][] itrD = interestDownPPM(image);
@@ -331,7 +336,7 @@ public class EnergieAvant {
 		Graph g2 = new Graph(res.length*res[0].length+2);
 		
 		for(int i = 0;i < nb;i++){
-			System.out.println("ITERATION "+(i+1));
+			System.out.println("Coupe "+(i+1)+" sur "+nb);
 			g = new Graph(res.length*res[0].length+2);
 			itrR = interestRightPPM(res);
 			itrD = interestDownPPM(res);
@@ -347,12 +352,14 @@ public class EnergieAvant {
 
 		SeamCarving.writeppm(res,"energie_cutCol_"+fichier);
 		//return image;
+		System.out.println("terminé");
 	}
 	
 	public static void cutLinePPM(String fichier, int nb){
 		RGB[][] image = SeamCarving.readppm(fichier);
 		image = Test.rotateLeftPPM(image);
-		
+
+		SeamCarving.writeppm(image,"energie_before_"+fichier);
 		int[][] itrR = interestRightPPM(image);
 		int[][] itrD = interestDownPPM(image);
 		int[][] itrU = interestUpPPM(image);
@@ -361,7 +368,7 @@ public class EnergieAvant {
 		Graph g2 = new Graph(res.length*res[0].length+2);
 		
 		for(int i = 0;i < nb;i++){
-			System.out.println("ITERATION "+(i+1));
+			System.out.println("Coupe  "+(i+1)+" sur "+nb);
 			g = new Graph(res.length*res[0].length+2);
 			itrR = interestRightPPM(res);
 			itrD = interestDownPPM(res);
@@ -378,6 +385,7 @@ public class EnergieAvant {
 		res = Test.rotateRightPPM(res);
 		SeamCarving.writeppm(res,"energie_cutLine_"+fichier);
 		//return image;
+		System.out.println("terminé");
 	}
 	
 	public static void main(String[] args){
